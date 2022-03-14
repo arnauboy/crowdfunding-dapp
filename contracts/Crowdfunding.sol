@@ -57,7 +57,7 @@ contract FundMarket is ReentrancyGuard {
         uint256 itemId
     ) public payable nonReentrant {
         require(msg.value > 0, "Please donate a minimum of 1 wei in order to complete the operation");
-        FundingCampaign memory campaign = idToFundingCampaign[itemId];
+        FundingCampaign storage campaign = idToFundingCampaign[itemId];
         require(msg.sender != campaign.campaignOwner, "You cannot donate to your own funding campaign");
         campaign.FundsCollected += msg.value;
         campaign.campaignOwner.transfer(msg.value);
@@ -70,12 +70,12 @@ contract FundMarket is ReentrancyGuard {
 
   function fetchCampaigns() public view returns (FundingCampaign[] memory) {
     uint itemCount = _itemIds.current();
-    uint itemsClosed = _closedCampaigns.current();
+    uint itemClosed = _closedCampaigns.current();
     uint currentIndex = 0;
 
-    FundingCampaign[] memory items = new FundingCampaign[](itemsClosed);
+    FundingCampaign[] memory items = new FundingCampaign[](itemCount - itemClosed);
     for (uint i = 0; i < itemCount; i++) {
-      if (idToFundingCampaign[i + 1].FundsRequested < idToFundingCampaign[i + 1].FundsCollected) {
+      if (idToFundingCampaign[i + 1].FundsRequested > idToFundingCampaign[i + 1].FundsCollected) {
         uint currentItemId = i + 1;
         FundingCampaign storage currentItem = idToFundingCampaign[currentItemId];
         items[currentIndex] = currentItem;
