@@ -1,19 +1,34 @@
 const { expect } = require("chai");
 const { ethers } = require("hardhat");
 
-describe("Greeter", function () {
-  it("Should return the new greeting once it's changed", async function () {
-    const Greeter = await ethers.getContractFactory("Greeter");
-    const greeter = await Greeter.deploy("Hello, world!");
-    await greeter.deployed();
+describe("Crowdfunding", function () {
+  it("Should create campaigns, execute donations and fetch campaigns", async function () {
+    const FundMarket = await ethers.getContractFactory("FundMarket");
+    const fundMarket = await FundMarket.deploy();
+    await fundMarket.deployed();
 
-    expect(await greeter.greet()).to.equal("Hello, world!");
+    //const auctionPrice = ethers.utils.parseUnits('100','ethers')
+    await fundMarket.createCampaign(ethers.utils.parseUnits('100','ether'));
 
-    const setGreetingTx = await greeter.setGreeting("Hola, mundo!");
+    const [_,donatorAddress] = await ethers.getSigners(); //We need an address for the donator user, not the one creating the campaign
 
-    // wait until the transaction is mined
-    await setGreetingTx.wait();
+    await fundMarket.connect(donatorAddress).donateCampaign(0, { value: ethers.utils.parseUnits('10','ether')}); //Last {} is the message
 
-    expect(await greeter.greet()).to.equal("Hola, mundo!");
+    let items = await fundMarket.fetchCampaigns();
+
+    items = await Promise.all(items.map(async i => {
+      let item = {
+        FundsRequested: i.FundsRequested.toString(),
+        FundsCollected: i.FundsCollected.toString(),
+        totalDonators: i.totalDonators.toString(),
+        fundsReached: i.fundsReached,
+        info: i.info,
+        url: i.url,
+        campaignOwner: i.campaignOwner,
+        itemId: i.itemId.toString()
+      }
+      return item;
+    }))
+    console.log("Campaigns:", items);
   });
 });

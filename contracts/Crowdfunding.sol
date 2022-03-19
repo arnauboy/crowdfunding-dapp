@@ -17,6 +17,8 @@ contract FundMarket is ReentrancyGuard {
       uint256 FundsCollected;
       uint256 totalDonators;
       bool fundsReached;
+      string info;
+      string url;
   }
 
   mapping(uint256 => FundingCampaign) private idToFundingCampaign;
@@ -43,7 +45,9 @@ contract FundMarket is ReentrancyGuard {
       FundsRequested,
       0,
       0,
-      false
+      false,
+      "bla bla bla",
+      "www.arnauboy.com"
     );
 
   emit CampaignStarted (
@@ -58,6 +62,7 @@ contract FundMarket is ReentrancyGuard {
   function donateCampaign (
         uint256 itemId
     ) public payable nonReentrant {
+      require(itemId < _itemIds.current(), "Item id does not exist");
         require(msg.value > 0, "Please donate a minimum of 1 wei in order to complete the operation");
         FundingCampaign storage campaign = idToFundingCampaign[itemId];
         require(msg.sender != campaign.campaignOwner, "You cannot donate to your own funding campaign");
@@ -86,5 +91,28 @@ contract FundMarket is ReentrancyGuard {
       }
     }
     return items;
+  }
+
+  function fetchMyCampaigns() public view returns (FundingCampaign[] memory) {
+    uint itemCount = _itemIds.current();
+    uint currentIndex = 0;
+
+    uint itemsMine = 0;
+    for (uint i =0; i<itemCount; ++i) {
+      if (idToFundingCampaign[i].campaignOwner == msg.sender) {
+        ++itemsMine;
+      }
+    }
+
+    FundingCampaign[] memory myItems = new FundingCampaign[](itemsMine);
+    for (uint i = 0; i < itemCount; i++) {
+      if (idToFundingCampaign[i].campaignOwner == msg.sender) {
+        uint currentItemId = i;
+        FundingCampaign memory currentItem = idToFundingCampaign[currentItemId];
+        myItems[currentIndex] = currentItem;
+        currentIndex += 1;
+      }
+    }
+    return myItems;
   }
 }
