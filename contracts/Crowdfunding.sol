@@ -4,7 +4,7 @@ pragma solidity ^0.8.4;
 import "@openzeppelin/contracts/utils/Counters.sol";
 import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
 
-
+import "hardhat/console.sol";
 contract FundMarket is ReentrancyGuard {
   using Counters for Counters.Counter;
   Counters.Counter private _itemIds;
@@ -16,6 +16,7 @@ contract FundMarket is ReentrancyGuard {
       uint256 FundsRequested;
       uint256 FundsCollected;
       uint256 totalDonators;
+      bool fundsReached;
   }
 
   mapping(uint256 => FundingCampaign) private idToFundingCampaign;
@@ -35,15 +36,14 @@ contract FundMarket is ReentrancyGuard {
     uint256 FundsRequested
   ) public payable nonReentrant {
     require(FundsRequested > 0, "The requested funds must be at least 1 wei");
-
-    _itemIds.increment();
     uint256 itemId = _itemIds.current();
     idToFundingCampaign[itemId] =  FundingCampaign(
       itemId,
       payable(msg.sender),
       FundsRequested,
       0,
-      0
+      0,
+      false
     );
 
   emit CampaignStarted (
@@ -51,6 +51,8 @@ contract FundMarket is ReentrancyGuard {
        payable(msg.sender),
        FundsRequested
     );
+
+  _itemIds.increment();
   }
 
   function donateCampaign (
@@ -63,8 +65,9 @@ contract FundMarket is ReentrancyGuard {
         campaign.campaignOwner.transfer(msg.value);
         campaign.totalDonators += 1;
         //if s'ha igualat o superat el que es volia recaptar s'elimina del marketplace
-        if(campaign.FundsCollected >= campaign.FundsCollected) {
+        if(campaign.FundsCollected >= campaign.FundsRequested) {
           _closedCampaigns.increment();
+          campaign.fundsReached = true;
         }
     }
 
@@ -75,9 +78,9 @@ contract FundMarket is ReentrancyGuard {
 
     FundingCampaign[] memory items = new FundingCampaign[](itemCount - itemClosed);
     for (uint i = 0; i < itemCount; i++) {
-      if (idToFundingCampaign[i + 1].FundsRequested > idToFundingCampaign[i + 1].FundsCollected) {
-        uint currentItemId = i + 1;
-        FundingCampaign storage currentItem = idToFundingCampaign[currentItemId];
+      if (!idToFundingCampaign[i].fundsReached) {
+        uint currentItemId = i;
+        FundingCampaign memory currentItem = idToFundingCampaign[currentItemId];
         items[currentIndex] = currentItem;
         currentIndex += 1;
       }
