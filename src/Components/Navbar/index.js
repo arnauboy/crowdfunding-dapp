@@ -12,16 +12,16 @@ const Navbar = () => {
     <>
       <Nav>
         <NavMenu>
-          <NavLink to='/about' activeStyle>
-            About
-          </NavLink>
           <NavLink to='/' activeStyle>
             Home Page
+          </NavLink>
+          <NavLink to='/about' activeStyle>
+            About
           </NavLink>
           <NavLink to='/config' activeStyle>
             Config
           </NavLink>
-          <NavLink to='/sign-up' activeStyle>
+          <NavLink to='/signup' activeStyle>
             SignUp
           </NavLink>
           {/* Second Nav */}

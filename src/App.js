@@ -1,9 +1,10 @@
 import './App.css';
 import Navbar from './Components/Navbar';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import Home from './pages';
+import Home from './pages/index';
 import About from './pages/about';
 import SignUp from './pages/signup';
+import Config from './pages/config';
 
 //import { useState } from 'react';
 //import { ethers } from 'ethers'
@@ -44,9 +45,10 @@ function App() {
     <Router>
       <Navbar />
       <Routes>
-        <Route path='/' exact component={Home} />
-        <Route path='/about' component={About} />
-        <Route path='/sign-up' component={SignUp} />
+        <Route path='/' element={<Home />} />
+        <Route path='/about' element={<About />} />
+        <Route path='/signup' element={<SignUp />} />
+        <Route path='/config' element={<Config />} />
       </Routes>
     </Router>
   );
