@@ -15,14 +15,14 @@ const Navbar = () => {
           <NavLink to='/' activeStyle>
             Home Page
           </NavLink>
+          <NavLink to='/closedCampaigns' activeStyle>
+            Closed campaigns
+          </NavLink>
           <NavLink to='/about' activeStyle>
             About
           </NavLink>
           <NavLink to='/config' activeStyle>
             Config
-          </NavLink>
-          <NavLink to='/signup' activeStyle>
-            SignUp
           </NavLink>
           {/* Second Nav */}
           {/* <NavBtnLink to='/sign-in'>Sign In</NavBtnLink> */}

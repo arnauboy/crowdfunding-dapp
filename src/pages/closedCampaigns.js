@@ -1,18 +1,18 @@
 import React from 'react';
 
-const SignUp = () => {
+const ClosedCampaigns = () => {
   return (
     <div
       style={{
         display: 'flex',
-        justifyContent: 'Right',
+        justifyContent: 'center',
         alignItems: 'Right',
         height: '100vh'
       }}
     >
-      <h1>Sign Up</h1>
+      <h1>Closed campaigns</h1>
     </div>
   );
 };
 
-export default SignUp;
+export default ClosedCampaigns;
