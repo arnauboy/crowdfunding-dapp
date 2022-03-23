@@ -17,18 +17,17 @@ import {setGlobalState,useGlobalState} from './state'
 
 export function getAccount() {
   let web3;
-  let network;
   let setEventListener=false;
   const correctNetwork = "0x89" //Polygon Testnet
+  let network;
   //const correctNetwork = "0x13881" //Mumbai Tesnet
-
  console.log("Call get account for Metamask wallet connection")
    window.ethereum ?
    window.ethereum.request({method: "eth_requestAccounts"}).then((accounts) => {
      setGlobalState('accountSignedIn',accounts[0])
      web3 = new ethers.providers.Web3Provider(window.ethereum)
-     network = window.ethereum.chainId
-
+     network = window.ethereum.chainId;
+     setGlobalState('currentNetwork', network)
      // Check if network is correct
      network === correctNetwork ?
        console.log("You're on the correct network")
