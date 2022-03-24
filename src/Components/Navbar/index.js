@@ -33,7 +33,7 @@ const Navbar = () => {
         </NavMenu>
         {
         signedIn ?
-        <div style={{display: "flex", alignItems: "center"}}>
+        <div style={{display: "flex", alignItems: "center", fontWeight: "bold"}}>
           {account}
         </div>
         :
