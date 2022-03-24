@@ -7,9 +7,9 @@ import ClosedCampaigns from './pages/closedCampaigns';
 import Config from './pages/config';
 import SignIn from './pages/signin';
 import React, { Component } from 'react';
-import { ethers } from 'ethers'
+//import { ethers } from 'ethers'
 import {setGlobalState} from './state'
-import { ToastContainer, toast } from 'react-toastify';
+import { ToastContainer } from 'react-toastify';
 //import Crowdfunding from './artifacts/contracts/Crowdfunding.sol/Crowdfunding.json'
 
 // Update with the contract address logged out to the CLI when it was deployed
@@ -53,9 +53,6 @@ export function getAccount() {
 }
 
 class App extends Component {
-  constructor(props) {
-    super(props);
-  }
 
   render() {
     return (

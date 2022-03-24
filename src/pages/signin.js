@@ -1,9 +1,9 @@
 import React from 'react';
-import App, {getAccount} from '../App.js'
-import { ethers } from 'ethers'
-import {setGlobalState,useGlobalState} from '../state'
-import {Navigate,Link} from 'react-router-dom'
-import { ToastContainer, toast } from 'react-toastify';
+import {getAccount} from '../App.js'
+//import { ethers } from 'ethers'
+import {useGlobalState} from '../state'
+import {Navigate} from 'react-router-dom'
+import {toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import metamaskLogo from '../images/metamask.png'
 
@@ -15,12 +15,12 @@ function SignIn() {
   let correctNetwork=false;
   let triedConnection = false;
   let network = useGlobalState('currentNetwork')[0]
-  if(network == "0x89" ) {
+  if(network === "0x89" ) {
     correctNetwork = true;
     successToast();
     return (<Navigate to="/"/>);
   }
-  else if(network != ''){
+  else if(network !== ''){
      triedConnection = true;
   }
   console.log(correctNetwork.toString())
@@ -33,7 +33,7 @@ function SignIn() {
         </div>
         <div style = {{ margin: 'auto', display: 'block'}}>
           <img style={{maxWidth: '5%'}} src ={metamaskLogo} alt="MetamaskLogo"/>
-          <button class="button-24" role="button" onClick={getAccount}>Connect Metamask Wallet</button>
+          <button class="button-24"  onClick={getAccount}>Connect Metamask Wallet</button>
         </div>
       </div>
       <div>

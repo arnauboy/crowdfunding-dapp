@@ -6,12 +6,12 @@ import {
   NavBtn,
   NavBtnLink,
 } from './NavbarElements';
-import {setGlobalState,useGlobalState} from '../../state'
+import {useGlobalState} from '../../state'
 
 const Navbar = () => {
   const currentNetwork = useGlobalState("currentNetwork");
   const account = useGlobalState("accountSignedIn");
-  let signedIn = (currentNetwork[0] == "0x89");
+  let signedIn = (currentNetwork[0] === "0x89");
   return (
     <>
       <Nav>
