@@ -2,14 +2,22 @@ import React from 'react';
 import App, {getAccount} from '../App.js'
 import { ethers } from 'ethers'
 import {setGlobalState,useGlobalState} from '../state'
+import {Navigate} from 'react-router-dom'
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
+const successToast = () => {
+    toast.success("Succesfully signed in!",{ autoClose: 5000, position: toast.POSITION.TOP_RIGHT, toastId: "123"})
+  };
 
 function SignIn() {
   let correctNetwork=false;
   let triedConnection = false;
-  console.log(useGlobalState('currentNetwork'))
   let network = useGlobalState('currentNetwork')[0]
-  if(network == "0x89") {
+  if(network == "0x89" ) {
     correctNetwork = true;
+    successToast();
+    return (<Navigate to="/"/>);
   }
   else if(network != ''){
      triedConnection = true;
@@ -29,8 +37,10 @@ function SignIn() {
               </div>
       : <> </>
       }
+
       </div>
     </div>
+
   );
 }
 

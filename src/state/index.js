@@ -1,8 +1,8 @@
 import {createGlobalState} from 'react-hooks-global-state'
 
 const {setGlobalState,useGlobalState} = createGlobalState({
-  accountSignedIn: '',
-  currentNetwork: ''
+  accountSignedIn: JSON.parse(window.localStorage.getItem('accountSignedIn')) ||'',
+  currentNetwork: JSON.parse(window.localStorage.getItem('currentNetwork')) ||''
 })
 
 export {useGlobalState,setGlobalState};

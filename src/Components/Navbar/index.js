@@ -6,8 +6,12 @@ import {
   NavBtn,
   NavBtnLink,
 } from './NavbarElements';
+import {setGlobalState,useGlobalState} from '../../state'
 
 const Navbar = () => {
+  const currentNetwork = useGlobalState("currentNetwork");
+  const account = useGlobalState("accountSignedIn");
+  let signedIn = (currentNetwork[0] == "0x89");
   return (
     <>
       <Nav>
@@ -27,9 +31,16 @@ const Navbar = () => {
           {/* Second Nav */}
           {/* <NavBtnLink to='/sign-in'>Sign In</NavBtnLink> */}
         </NavMenu>
+        {
+        signedIn ?
+        <div style={{display: "flex", alignItems: "center"}}>
+          {account}
+        </div>
+        :
         <NavBtn>
           <NavBtnLink to='/signin'>Sign In</NavBtnLink>
         </NavBtn>
+        }
       </Nav>
     </>
   );
