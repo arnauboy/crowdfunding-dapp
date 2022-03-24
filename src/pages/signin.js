@@ -33,7 +33,7 @@ function SignIn() {
         </div>
         <div style = {{maxWidth: '30%', margin: 'auto', display: 'block'}}>
           <button class="button-24"  onClick={getAccount}>
-            <img style={{maxWidth: '20%'}} src ={metamaskLogo} alt="MetamaskLogo"/>Connect Metamask Wallet
+            <img style={{maxWidth: '15%'}} src ={metamaskLogo} alt="MetamaskLogo"/> Connect Metamask Wallet
           </button>
         </div>
       </div>
