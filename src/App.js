@@ -25,11 +25,11 @@ export function getAccount() {
  window.ethereum ?
  window.ethereum.request({method: "eth_requestAccounts"}).then((accounts) => {
    setGlobalState('accountSignedIn',accounts[0])
-   window.localStorage.setItem('accountSignedIn', JSON.stringify(accounts[0]));
+   window.sessionStorage.setItem('accountSignedIn', JSON.stringify(accounts[0]));
    //web3 = new ethers.providers.Web3Provider(window.ethereum)
    network = window.ethereum.chainId;
    setGlobalState('currentNetwork', network)
-   window.localStorage.setItem('currentNetwork', JSON.stringify(network));
+   window.sessionStorage.setItem('currentNetwork', JSON.stringify(network));
 
    // Check if network is correct
    network === correctNetwork ?
