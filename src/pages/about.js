@@ -7,7 +7,7 @@ const About = () => {
       <h1 style={{textAlign: 'center'}}>My Story</h1>
         <p style = {{  maxWidth: '50%',margin: 'auto',textAlign: 'jusitfy'}}>
           Over a year ago, I became interested in blockchain technology and all the possible services it could offer. As a computer science student, I thought it would be a great
-          idea to explore a little more and create a decentralized application on the Ethereum blockchain for my final thesis: Elefund.
+          idea to explore a little more and create a decentralized application on the Ethereum blockchain for my final thesis: IvoryFund.
         </p>
         <h2 style={{textAlign: 'center'}}> Hope you enjoy! </h2>
 

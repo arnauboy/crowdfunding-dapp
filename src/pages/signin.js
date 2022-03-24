@@ -29,11 +29,12 @@ function SignIn() {
       <div style={{maxWidth: '50%',margin: 'auto'}}>
         <div class="alert alert-info" role="alert">
         Make sure you are connected to the Polygon Mainnet in Metamask.
-        If you still have not installed the Metamask plugin, install it <a href="https://chrome.google.com/webstore/detail/metamask/nkbihfbeogaeaoehlefnkodbefgpgknn?hl=ca" class="alert-link">here</a>
+        If you have not installed the Metamask plugin yet, install it <a href="https://chrome.google.com/webstore/detail/metamask/nkbihfbeogaeaoehlefnkodbefgpgknn?hl=ca" class="alert-link">here</a>
         </div>
-        <div style = {{ margin: 'auto', display: 'block'}}>
-          <img style={{maxWidth: '5%'}} src ={metamaskLogo} alt="MetamaskLogo"/>
-          <button class="button-24"  onClick={getAccount}>Connect Metamask Wallet</button>
+        <div style = {{maxWidth: '30%', margin: 'auto', display: 'block'}}>
+          <button class="button-24"  onClick={getAccount}>
+            <img style={{maxWidth: '20%'}} src ={metamaskLogo} alt="MetamaskLogo"/>Connect Metamask Wallet
+          </button>
         </div>
       </div>
       <div>
