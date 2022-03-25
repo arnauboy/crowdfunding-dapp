@@ -6,7 +6,15 @@ import {
   NavBtn,
   NavBtnLink,
 } from './NavbarElements';
-import {useGlobalState} from '../../state'
+import {setGlobalState,useGlobalState} from '../../state'
+import logoutImg from "../../images/logout.png"
+
+const logout = () => {
+  setGlobalState("accountSignedIn",'')
+  setGlobalState("currentNetwork",'')
+  window.sessionStorage.removeItem('accountSignedIn')
+  window.sessionStorage.removeItem('currentNetwork')
+}
 
 const Navbar = () => {
   const currentNetwork = useGlobalState("currentNetwork");
@@ -35,6 +43,9 @@ const Navbar = () => {
         signedIn ?
         <div style={{display: "flex", alignItems: "center", fontWeight: "bold"}}>
           {account}
+          <button class="imgButton" style={{maxWidth: '10%'}} onClick={logout}>
+            <img style={{maxWidth: '50%'}} src ={logoutImg} alt="logout"/>
+          </button>
         </div>
         :
         <NavBtn>
