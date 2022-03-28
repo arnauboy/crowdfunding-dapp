@@ -6,15 +6,10 @@ import About from './pages/about';
 import ClosedCampaigns from './pages/closedCampaigns';
 import Config from './pages/config';
 import SignIn from './pages/signin';
-import React, { Component } from 'react';
-import { ethers } from 'ethers'
+import React from 'react';
 import {useGlobalState,setGlobalState} from './state'
 import { ToastContainer } from 'react-toastify';
-import FundMarket from './artifacts/contracts/Crowdfunding.sol/FundMarket.json'
-import {Navigate} from 'react-router-dom'
 
-// Update with the contract address logged out to the CLI when it was deployed
-const crowdfundingAddress = "0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512"
 
 export function getAccount() {
   //let web3;
@@ -57,27 +52,6 @@ export function getAccount() {
 
 
 function App() {
-
-  async function fetchCampaigns() {
-    if(typeof window.ethereum !== 'undefined'){
-      const provider = new ethers.providers.Web3Provider(window.ethereum);
-      const contract = new ethers.Contract(crowdfundingAddress,FundMarket.abi, provider)
-      try {
-        const data = await contract.fetchCampaigns();
-        return data;
-      }
-      catch (err){
-        console.log("Error: " , err)
-      }
-    }
-  }
-
-  async function requestAccount() {
-    await window.ethereum.request({method: "eth_requestAccounts"});
-  }
-
-  const openCampaigns = fetchCampaigns();
-  console.log("Open campaigns: ", openCampaigns);
   return (
     <Router>
       <ToastContainer />
