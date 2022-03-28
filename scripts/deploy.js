@@ -14,10 +14,10 @@ async function main() {
   // await hre.run('compile');
 
   // We get the contract to deploy
-  const Crowdfunding = await hre.ethers.getContractFactory("Crowdfunding");
+  const Crowdfunding = await hre.ethers.getContractFactory("FundMarket");
   const crowdfunding = await Crowdfunding.deploy();
   await crowdfunding.deployed();
-  console.log("Crowdfunding deployed to:", greeter.address);
+  console.log("Crowdfunding deployed to:", crowdfunding.address);
 }
 
 
