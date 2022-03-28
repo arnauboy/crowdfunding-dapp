@@ -52,6 +52,10 @@ export function getAccount() {
 
 
 function App() {
+  let network = useGlobalState('currentNetwork')[0]
+  if(network !== "0x89" ) {
+    return (<SignIn/>);
+  }
   return (
     <Router>
       <ToastContainer />

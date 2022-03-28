@@ -3,6 +3,7 @@ body {
   font-family: 'Titillium Web', sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+
 }
 
 code {
@@ -23,6 +24,17 @@ figcaption {
   text-align: center;
 }
 
+h1 {
+  color: #92C9A0;
+  font-size: 100px;
+  font-weight: bold;
+  letter-spacing: -1px;
+  line-height: 1;
+  text-align: center;
+ }
+
+ h2 { color: #92C9A0; font-size: 30px; font-weight: 300; line-height: 32px; margin: 0 0 72px; text-align: center; }
+
 .button-24 {
   background: #FF4742;
   border: 1px solid #FF4742;
@@ -33,7 +45,7 @@ figcaption {
   cursor: pointer;
   display: inline-block;
   font-family: 'Titillium Web', sans-serif;
-  font-size: 16px;
+  font-size: 20px;
   font-weight: 800;
   line-height: 16px;
   min-height: 40px;
