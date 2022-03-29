@@ -29,18 +29,19 @@ function SignIn() {
     position: "fixed",
     top: "50%",
     left: "50%",
-    marginTop: "-250px",
+    marginTop: "-350px",
     marginLeft: "-500px"}}>
-      <h1> Welcome to Ivory Fund </h1>
-      <h2> Sign in and join our community!</h2>
+      <h1> Welcome to Ivory Fund! </h1>
+      <h2> The place for funding new projects or creating your own campaign! </h2>
+      <h2 style={{color: "black"}}> Sign in and join our community!</h2>
       <div style={{margin: 'auto', maxWidth: "70%"}}>
         <div>
           <img style={{maxWidth: "30%",float: "left"}} src ={logo} alt="MetamaskLogo"/>
         </div>
         <div>
           <p class="alert alert-info" role="alert" style={{ maxWidth: "60%", float: "right"}}>
-          Make sure you are connected to the Polygon Mainnet in Metamask.
-          If you have not installed the Metamask plugin yet, install it <a href="https://chrome.google.com/webstore/detail/metamask/nkbihfbeogaeaoehlefnkodbefgpgknn?hl=ca" class="alert-link">here</a>
+          If you have not installed the Metamask plugin yet, install it <a href="https://chrome.google.com/webstore/detail/metamask/nkbihfbeogaeaoehlefnkodbefgpgknn?hl=ca" class="alert-link">here</a>.
+           To add Polygon Network follow this <a href="https://docs.polygon.technology/docs/develop/metamask/config-polygon-on-metamask/" class="alert-link"> documentation</a>.
           </p>
           <div style = {{ maxWidth: "60%", float: "right"}}>
             <button class="button-24"  onClick={getAccount}>

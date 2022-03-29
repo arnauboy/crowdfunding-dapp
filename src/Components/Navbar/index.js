@@ -21,7 +21,7 @@ const Navbar = () => {
       <Nav>
         <NavMenu>
           <NavLink to='/' activeStyle>
-            Home Page
+            Home
           </NavLink>
           <NavLink to='/closedCampaigns' activeStyle>
             Closed campaigns
@@ -35,7 +35,7 @@ const Navbar = () => {
           {/* Second Nav */}
           {/* <NavBtnLink to='/sign-in'>Sign In</NavBtnLink> */}
         </NavMenu>
-        <div style={{display: "flex", alignItems: "center", fontWeight: "bold"}}>
+        <div style={{display: "flex", alignItems: "center",}}>
           {account}
           <button class="imgButton" style={{maxWidth: '10%'}} onClick={logout}>
             <img style={{maxWidth: '50%'}} src ={logoutImg} alt="logout"/>
