@@ -51,7 +51,7 @@ function SignIn() {
           {triedConnection
           ? correctNetwork
                   ? <> </>
-                  :<div style={{maxWidth: '60%',float: "right", marginTop: '30px'}} class="alert alert-warning" role="alert">
+                  :<div style={{maxWidth: '50%',float: "right", marginTop: '30px'}} class="alert alert-warning" role="alert">
                     Oops, wrong network! You should connect Metamask to Polygon Mainnet Network!
                   </div>
           : <> </>

@@ -3,7 +3,7 @@ import styled from 'styled-components';
 
 export const Nav = styled.nav`
 
-  height: 85px;
+  height: 100px;
   display: flex;
   justify-content: space-between;
   padding: 0.2rem calc((100vw - 1000px) / 2);
@@ -22,6 +22,11 @@ export const NavLink = styled(Link)`
   cursor: pointer;
   &.active {
     color: #000000;
+    text-decoration: none;
+  }
+  &:hover {
+    color: #000000;
+    text-decoration: none;
   }
 `;
 
@@ -48,24 +53,5 @@ export const NavBtn = styled.nav`
   width: 100vw; */
   @media screen and (max-width: 768px) {
     display: none;
-  }
-`;
-
-export const NavBtnLink = styled(Link)`
-  border-radius: 4px;
-  background: #EBFEEF;
-  padding: 10px 22px;
-  color: #1CA65A;
-  outline: none;
-  border: none;
-  cursor: pointer;
-  transition: all 0.2s ease-in-out;
-  text-decoration: none;
-  /* Second Nav */
-  margin-left: 24px;
-  &:hover {
-    transition: all 0.2s ease-in-out;
-    background: #92C9A0;
-    color: #000;
   }
 `;
