@@ -15,7 +15,7 @@ function SignIn() {
   let correctNetwork=false;
   let triedConnection = false;
   let network = useGlobalState('currentNetwork')[0]
-  if(network === "0x89" ) {
+  if(network === "0x539" ) {
     correctNetwork = true;
     successToast();
   }
