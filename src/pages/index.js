@@ -5,6 +5,7 @@ import FundMarket from '../artifacts/contracts/Crowdfunding.sol/FundMarket.json'
 import {useGlobalState} from '../state'
 import {crowdfundingAddress} from "../config"
 import {useEffect, useState} from 'react'
+import placeholder from "../images/placeholder-image.png"
 
 const Home = () => {
   const [openCampaigns, setOpenCampaigns] = useState([])
@@ -16,7 +17,7 @@ const Home = () => {
 
   async function loadCampaigns() {
     if(typeof window.ethereum !== 'undefined'){
-      const provider = new ethers.providers.Web3Provider(window.ethereum); //we could use provier JsonRpcProvider() from Web3Modal
+      const provider = new ethers.providers.Web3Provider(window.ethereum); //we could use provier JsonRpcProvider()
       const contract = new ethers.Contract(crowdfundingAddress,FundMarket.abi, provider)
       try {
         const data = await contract.fetchCampaigns();
@@ -29,6 +30,7 @@ const Home = () => {
             fundsCollected,
             itemId: i.itemId.toNumber(),
             owner : i.campaignOwner,
+            info: i.info,
           }
           return item
         }))
@@ -41,6 +43,8 @@ const Home = () => {
     }
   }
 
+  async function donateCampaign(campaign) {}
+
   /*async function requestAccount() {
     await window.ethereum.request({method: "eth_requestAccounts"});
   }*/
@@ -51,11 +55,36 @@ const Home = () => {
   }
 
   if (loadingState === 'loaded' && !openCampaigns.length) return(
-    <h1> No open campaigns</h1>
+    <h2> No open campaigns</h2>
   )
   return (
     <div>
-      <h1>Home Page</h1>
+      <h2> Open campaigns </h2>
+      <div className="flex justify-center">
+        <div className="px-4" style={{maxWidth: '1600px'}}>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 pt-4">
+          {
+            openCampaigns.forEach((campaign, i) => {
+              <div key={i} className="border shadow rounded-xl overflow-hidden">
+                <img src={placeholder} alt="Campaign" />
+                <div className="p-4">
+                  <p style={{ height: '64px '}} className="text-2xl font-semibold">
+                    {campaign.itemId}
+                  </p>
+                  <div style={{ height:'70px', overflow:'hidden'}}>
+                    <p className="text-gray-400">{campaign.info} </p>
+                  </div>
+                </div>
+                <div className="p-4 bg-black">
+                  <p className="text-2xl mb-4 font-bold text-white">{campaign.fundsCollected} MATIC/{campaign.fundsRequested} MATIC</p>
+                  <button className="w-full bg-pink-500 text-white font-bold py-2 px-12 rounded" onClick={donateCampaign(campaign)}>Donate</button>
+                </div>
+              </div>
+            })
+          }
+          </div>
+        </div>
+      </div>
     </div>
   );
 };
