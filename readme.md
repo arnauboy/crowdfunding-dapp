@@ -2,7 +2,7 @@
 
 A crowdfunding platform to finance startups via crowdfunding campaigns and ICO on the Polygon blockchain.
 
-Url: https://https://ivoryfund.netlify.app/
+Url: https://ivoryfund.netlify.app/
 
 ## Project Status
 This project is currently in development.
