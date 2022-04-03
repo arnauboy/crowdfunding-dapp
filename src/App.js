@@ -7,6 +7,7 @@ import About from './pages/about';
 import ClosedCampaigns from './pages/closedCampaigns';
 import Config from './pages/config';
 import SignIn from './pages/signin';
+import StartCampaign from './pages/startCampaign'
 import React from 'react';
 import {useGlobalState,setGlobalState} from './state'
 import { ToastContainer } from 'react-toastify';
@@ -65,9 +66,10 @@ function App() {
       <LeftComponent />
       <Routes>
         <Route path='/' element={<Home />} />
-        <Route path='/about' element={<About />} />
-        <Route path='/closedCampaigns' element={<ClosedCampaigns />} />
-        <Route path='/config' element={<Config />} />
+          <Route path='/about' element={<About />} />
+          <Route path='/closedCampaigns' element={<ClosedCampaigns />} />
+          <Route path='/config' element={<Config />} />
+          <Route path='/startCampaign' element={<StartCampaign />} />
       </Routes>
     </Router>
   )

@@ -1,0 +1,52 @@
+$color: black;
+$color2: #1CA65A;
+$radius: .35rem;
+$border-width: 2px;
+$color-bg: white;
+$offset: .5rem;
+$transition: .3s;
+
+.createButton {
+  font-weight: 600;
+  border: solid $border-width $color;
+  outline: 0;
+  padding: 1rem 4rem;
+  font-size: 0.8rem;
+  color: black;
+  letter-spacing: .08rem;
+  background-color: $color-bg;
+  border-radius: $radius;
+  position: absolute;
+  cursor: pointer;
+  text-decoration: none;
+
+  &::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: $color2;
+      z-index: -1;
+      border-radius: $radius;
+      border: solid $border-width $color;
+      transition: all $transition ease-in-out;
+      width: 90%;
+      height: 90%;
+      text-decoration: none;
+      color: black;
+  }
+
+  &:hover {
+    &::after {
+      width: 100%;
+      height: 100%;
+      top: $offset;
+      left: $offset;
+      text-decoration: none;
+      color: black;
+    }
+  }
+  color: black;
+}

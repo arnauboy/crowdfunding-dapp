@@ -1,8 +1,14 @@
 import React from 'react';
-import "./leftComponent.css"
+import "./leftComponent.scss"
+import { useNavigate } from 'react-router-dom'
 
 const LeftComponent = () => {
-  return (<> </>);
+  const navigate = useNavigate()
+  return (
+    <div style={{float:"left", marginLeft:"100px"}}>
+      <button className="createButton" onClick={() => navigate('/startCampaign')}> START CAMPAIGN</button>
+    </div>
+  );
 };
 
 export default LeftComponent;
