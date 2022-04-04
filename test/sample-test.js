@@ -8,7 +8,7 @@ describe("Crowdfunding", function () {
     await fundMarket.deployed();
 
     //const auctionPrice = ethers.utils.parseUnits('100','ethers')
-    await fundMarket.createCampaign(ethers.utils.parseUnits('100','ether'));
+    await fundMarket.createCampaign(ethers.utils.parseUnits('100','ether'),'Ivory Fund','bla bla bla','bla bla bla', 'bla bla bla','ipfshash');
 
     const [_,donatorAddress] = await ethers.getSigners(); //We need an address for the donator user, not the one creating the campaign
 
@@ -22,10 +22,13 @@ describe("Crowdfunding", function () {
         FundsCollected: i.FundsCollected.toString(),
         totalDonators: i.totalDonators.toString(),
         fundsReached: i.fundsReached,
+        title: i.title,
+        description: i.description,
         info: i.info,
         url: i.url,
         campaignOwner: i.campaignOwner,
-        itemId: i.itemId.toString()
+        itemId: i.itemId.toString(),
+        ipfsHash: i.ipfsHash
       }
       return item;
     }))

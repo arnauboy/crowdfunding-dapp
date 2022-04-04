@@ -69,10 +69,10 @@ const Home = () => {
                 <img src={placeholder} alt="Campaign" />
                 <div className="p-4">
                   <p style={{ height: '64px '}} className="text-2xl font-semibold">
-                    {campaign.itemId}
+                    {campaign.title}
                   </p>
                   <div style={{ height:'70px', overflow:'hidden'}}>
-                    <p className="text-gray-400">{campaign.info} </p>
+                    <p className="text-gray-400">{campaign.description} </p>
                   </div>
                 </div>
                 <div className="p-4 bg-black">

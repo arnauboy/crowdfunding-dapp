@@ -17,8 +17,11 @@ contract FundMarket is ReentrancyGuard {
       uint256 FundsCollected;
       uint256 totalDonators;
       bool fundsReached;
+      string title;
+      string description;
       string info;
       string url;
+      string ipfsHash;
   }
 
   mapping(uint256 => FundingCampaign) private idToFundingCampaign;
@@ -35,7 +38,7 @@ contract FundMarket is ReentrancyGuard {
   }
 
   function createCampaign(
-    uint256 FundsRequested
+    uint256 FundsRequested, string calldata title, string calldata description, string calldata info, string calldata url, string calldata ipfsHash
   ) public payable nonReentrant {
     require(FundsRequested > 0, "The requested funds must be at least 1 wei");
     uint256 itemId = _itemIds.current();
@@ -46,8 +49,11 @@ contract FundMarket is ReentrancyGuard {
       0,
       0,
       false,
-      "bla bla bla",
-      "www.arnauboy.com"
+      title,
+      description,
+      info,
+      url,
+      ipfsHash
     );
 
   emit CampaignStarted (
