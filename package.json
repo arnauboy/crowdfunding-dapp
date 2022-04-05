@@ -18,6 +18,8 @@
     "react-app-rewired": "^2.2.1",
     "react-dom": "^17.0.2",
     "react-hooks-global-state": "^1.0.2",
+    "react-input-number": "^5.0.19",
+    "react-native": "^0.68.0",
     "react-router-dom": "^6.3.0",
     "react-scripts": "5.0.0",
     "react-toastify": "^8.2.0",

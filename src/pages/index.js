@@ -31,6 +31,7 @@ const Home = () => {
             itemId: i.itemId.toNumber(),
             owner : i.campaignOwner,
             info: i.info,
+            ipfsHash: i.ipfsHash
           }
           return item
         }))
@@ -65,6 +66,8 @@ const Home = () => {
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 pt-4">
           {
             openCampaigns.forEach((campaign, i) => {
+              <div>
+              <div> <p> this is a campaign </p> </div>
               <div key={i} className="border shadow rounded-xl overflow-hidden">
                 <img src={placeholder} alt="Campaign" />
                 <div className="p-4">
@@ -79,6 +82,7 @@ const Home = () => {
                   <p className="text-2xl mb-4 font-bold text-white">{campaign.fundsCollected} MATIC/{campaign.fundsRequested} MATIC</p>
                   <button className="w-full bg-pink-500 text-white font-bold py-2 px-12 rounded" onClick={donateCampaign(campaign)}>Donate</button>
                 </div>
+              </div>
               </div>
             })
           }
