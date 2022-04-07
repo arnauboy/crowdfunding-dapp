@@ -39,7 +39,7 @@ const Navbar = () => {
         </NavMenu>
         <div style={{display: "flex", alignItems: "center"}}>
           {account}
-          <button class="imgButton" style={{width: "45px"}} onClick={logout}>
+          <button class="imgButton" style={{width: "45px", marginLeft: "10px"}} onClick={logout}>
             <img style={{maxWidth: '50%'}} src ={logoutImg} alt="logout"/>
           </button>
         </div>

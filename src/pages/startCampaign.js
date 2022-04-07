@@ -4,7 +4,9 @@ import { ethers } from 'ethers'
 import FundMarket from '../artifacts/contracts/Crowdfunding.sol/FundMarket.json'
 import { Navigate } from 'react-router'
 
-const fundMarketAddress = "0x5FbDB2315678afecb367f032d93F642f64180aa3"
+import {
+  crowdfundingAddress
+} from '../config'
 
 class StartCampaign extends React.Component {
   constructor(props) {
@@ -54,7 +56,7 @@ class StartCampaign extends React.Component {
         console.log("Start creating campaign")
         const provider = new ethers.providers.Web3Provider(window.ethereum);
         const signer = provider.getSigner()
-        const contract = new ethers.Contract(fundMarketAddress,FundMarket.abi, signer)
+        const contract = new ethers.Contract(crowdfundingAddress,FundMarket.abi, signer)
         const transaction = await contract.createCampaign(ethers.utils.parseUnits(this.state.FundsRequested,'ether'),this.state.title,this.state.description,this.state.info,this.state.url,this.state.ipfsHash)
         await transaction.wait()
         console.log("Finished creating campaign")
@@ -107,7 +109,6 @@ class StartCampaign extends React.Component {
             </div>
             <input type = 'submit' value="Start"/>
           </form>
-          <img  style={{maxWidth: "40%"}}rc={`https://ipfs.io/ipfs/${this.state.ipfsHash}`} alt="" />
         </div>
       </div>
     );
