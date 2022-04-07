@@ -1,7 +1,5 @@
 import React from 'react';
-import {getAccount} from '../App.js'
-//import { ethers } from 'ethers'
-import {useGlobalState} from '../state'
+import {setGlobalState,useGlobalState} from '../state'
 import {toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import metamaskLogo from '../images/metamask.png'
@@ -10,6 +8,44 @@ import ivoryLogo from '../images/ivoryLogo.png'
 const successToast = () => {
     toast.success("Succesfully signed in!",{ autoClose: 5000, position: toast.POSITION.TOP_RIGHT, toastId: "123"})
   };
+
+export function getAccount() {
+  //let web3;
+  let setEventListener=false;
+  const correctNetwork = "0x539" //hardhat chainId
+  //const correctNetwork = "0x89" //Polygon Testnet
+  //const correctNetwork = "0x13881" //Mumbai Tesnet
+  let network;
+  console.log("Call get account for Metamask wallet connection")
+  window.ethereum ?
+  window.ethereum.request({method: "eth_requestAccounts"}).then((accounts) => {
+   setGlobalState('accountSignedIn',accounts[0])
+   window.sessionStorage.setItem('accountSignedIn', JSON.stringify(accounts[0]));
+   //web3 = new ethers.providers.Web3Provider(window.ethereum)
+   network = window.ethereum.chainId;
+   setGlobalState('currentNetwork', network)
+   window.sessionStorage.setItem('currentNetwork', JSON.stringify(network));
+
+   // Check if network is correct
+   network === correctNetwork ?
+     console.log("You're on the correct network")
+       :
+     console.log("You're on the wrong network: ", network)
+
+   // Set event listeners
+   if (!setEventListener) {
+       window.ethereum.on('accountsChanged', function () {
+           getAccount()
+       })
+
+       window.ethereum.on('chainChanged', function () {
+           getAccount()
+       })
+       setEventListener = true
+   }
+  }).catch((err) => console.log(err))
+  : console.log("Please install MetaMask")
+}
 
 function SignIn() {
   let correctNetwork=false;
