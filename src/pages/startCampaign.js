@@ -25,41 +25,43 @@ class StartCampaign extends React.Component {
 
 
 
-  captureFile (event) {
+  captureFile(event) {
     event.preventDefault()
     const file = event.target.files[0]
-    const reader =  new window.FileReader()
+    const reader = new window.FileReader()
     reader.readAsArrayBuffer(file)
     reader.onloadend = () => {
-      this.setState({buffer: Buffer(reader.result)})
-      console.log("ipfsHash:", this.state.buffer)
+      this.setState({ buffer: Buffer(reader.result) })
+      console.log('buffer', this.state.buffer)
     }
   }
 
   async createCampaign (event) {
     event.preventDefault()
     console.log(this.state)
-    ipfs.files.add(this.state.buffer, (error,result) => {
+    ipfs.files.add(this.state.buffer,async (error,result) => {
       if(error){
         console.error(error)
         return
       }
       this.setState({ipfsHash: result[0].hash})
       console.log('ipfsHash', this.state.ipfsHash)
+      console.log('ipfsHash', result[0].hash)
+      while(this.state.ipfsHash === '') {console.log("Setting ipfsHash")}
+      if ( this.state.title  === '' || this.state.description  === '' || this.state.info  === '' ||
+         this.state.url === '' || this.state.FundsRequested === 0) return
+      if (typeof window.ethereum !== 'undefined') {
+        console.log("Start creating campaign")
+        const provider = new ethers.providers.Web3Provider(window.ethereum);
+        const signer = provider.getSigner()
+        const contract = new ethers.Contract(fundMarketAddress,FundMarket.abi, signer)
+        const transaction = await contract.createCampaign(ethers.utils.parseUnits(this.state.FundsRequested,'ether'),this.state.title,this.state.description,this.state.info,this.state.url,this.state.ipfsHash)
+        await transaction.wait()
+        console.log("Finished creating campaign")
+        this.setState({redirect: true})
+      }
+      else console.log("Ethereum window undefined")
     })
-    if ( this.state.title  === '' || this.state.description  === '' || this.state.info  === '' ||
-       this.state.url === '' || this.state.FundsRequested === 0) return
-    if (typeof window.ethereum !== 'undefined') {
-      console.log("Start creating campaign")
-      const provider = new ethers.providers.Web3Provider(window.ethereum);
-      const signer = provider.getSigner()
-      const contract = new ethers.Contract(fundMarketAddress,FundMarket.abi, signer)
-      const transaction = await contract.createCampaign(ethers.utils.parseUnits(this.state.FundsRequested,'ether'),this.state.title,this.state.description,this.state.info,this.state.url,this.state.ipfsHash)
-      await transaction.wait()
-      console.log("Finished creating campaign")
-      this.setState({redirect: true})
-    }
-    else console.log("Ethereum window undefined")
   }
 
   render() {
