@@ -18,11 +18,13 @@ contract Users is ReentrancyGuard {
     mapping (address => User) private addressToUser;
 
     function getUser(address user) public view returns (User memory) {
-        return addressToUser[user];
+        User memory userGot = addressToUser[user];
+        return userGot;
     }
 
     function getCurrentUser() public view returns (User memory) {
-        return addressToUser[msg.sender];
+        User memory currentUser = addressToUser[msg.sender];
+        return currentUser;
     }
 
      function getNumberOfUsers() public view returns (uint256) {
