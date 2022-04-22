@@ -10,6 +10,11 @@ async function main() {
   const ivoryICO = await IvoryICO.deploy("0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",10000,100);
   await ivoryICO.deployed();
   console.log("IvoryICO deployed to:", ivoryICO.address);
+
+  const Users = await hre.ethers.getContractFactory("Users");
+  const users = await Users.deploy();
+  await users.deployed();
+  console.log("Users deployed to:", users.address);
 }
 
 main()
