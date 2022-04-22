@@ -8,11 +8,13 @@ import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
 contract ICO is ERC20, Ownable, ReentrancyGuard {
 
     uint256 _tokenRate;
+    uint256 _supplyLeft;
 
     constructor(address owner, uint256 initialSupply, uint256 tokenRate) ERC20("ivoryCoin", "IVO") {
       _mint(msg.sender, initialSupply);
       transferOwnership(owner);
       _tokenRate = tokenRate;
+      _supplyLeft = initialSupply;
     }
 
     /**
@@ -41,6 +43,8 @@ contract ICO is ERC20, Ownable, ReentrancyGuard {
     function buy() public payable nonReentrant {
       require(msg.sender.balance >= msg.value && msg.value != 0 ether, "ICO: function buy invalid input");
       uint256 amount = msg.value * _tokenRate;
+      require(amount <= _supplyLeft, "ICO: in function buy, amount to buy > supplyLeft");
+      _supplyLeft -= amount;
       _transfer(owner(), _msgSender(), amount);
     }
 
@@ -51,5 +55,9 @@ contract ICO is ERC20, Ownable, ReentrancyGuard {
     function withdraw(uint256 amount) public onlyOwner {
       require(amount <= address(this).balance, "ICO: function withdraw invalid input");
       payable(_msgSender()).transfer(amount);
+    }
+
+    function leftSupply() public view returns (uint256 supplyLeft) {
+      return _supplyLeft;
     }
 }
