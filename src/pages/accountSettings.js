@@ -13,7 +13,7 @@ class AccountSettings extends React.Component {
     super(props)
     this.state = {
       username: '',
-      color: '',
+      color: '#000000',
       redirect: false,
       showPicker: false,
     }
@@ -36,7 +36,6 @@ class AccountSettings extends React.Component {
         this.setState({
           color: color.hex
         })
-        console.log(color.hex)
     };
 
   async configUser(event) {
@@ -64,7 +63,7 @@ class AccountSettings extends React.Component {
            width: '40px',
            height: '15px',
            borderRadius: '3px',
-           background: this.state.color.hex,
+           background: this.state.color,
          },
          popover: {
            position: 'absolute',
@@ -99,7 +98,7 @@ class AccountSettings extends React.Component {
             </div>
             <div class="form-group">
               <label> Color </label>
-                <input type = "text"  class="form-control" value={this.state.color}  onChange = {(event) => this.setState({color: event.target.value})} />
+                <input type = "text"  class="form-control" style={{maxWidth: "100px", margin: "auto"}}value={this.state.color}  onChange = {(event) => this.setState({color: event.target.value})} />
             </div>
             <div>
           <div style={ styles.swatch } onClick={ this.onClick }>
