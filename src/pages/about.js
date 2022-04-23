@@ -14,6 +14,9 @@ const About = () => {
       <div>
         <img style={{maxWidth: '20%', margin: 'auto', display: 'block', padding: '50px'}} src ={me} alt="Arnau Garcia Rodríguez" title="Me: Arnau Garcia"/>
         <figcaption> Arnau Garcia</figcaption>
+        <div class="tooltip"> userafddfasdfsdfdsa
+          <span className="tooltiptext"> user </span>
+        </div>
       </div>
     </div>
   );

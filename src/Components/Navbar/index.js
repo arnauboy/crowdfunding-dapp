@@ -16,8 +16,6 @@ import Users from '../../artifacts/contracts/Users.sol/Users.json'
 import { ethers } from 'ethers'
 import {useEffect, useState} from 'react'
 
-
-
 const logout = () => {
   setGlobalState("accountSignedIn",'')
   setGlobalState("currentNetwork",'')
@@ -74,7 +72,10 @@ const Navbar = () => {
         <div style={{display: "flex", alignItems: "center"}}>
           {loadingState === 'loaded'
           ?
-           < p style={{color: user.color}}> {user.username} </p>
+          <div class="tooltip" style={{color: user.color}}> {user.username}
+            <span className="tooltiptext"> {user.userAddress} </span>
+          </div>
+
           : account
           }
           <button class="imgButton" style={{width: "45px", marginLeft: "10px"}} onClick={logout}>
