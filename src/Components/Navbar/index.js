@@ -26,7 +26,7 @@ const logout = () => {
 }
 
 const Navbar = () => {
-  const [username, setUsername] = useState('')
+  const [user, setUser] = useState('')
   const [loadingState, setLoadingState] = useState('not-loaded')
   const account = useGlobalState("accountSignedIn");
   const navigate = useNavigate()
@@ -35,23 +35,18 @@ const Navbar = () => {
     getUser() }, []
   )
 
-  const getUser = async () => {
+  async function getUser() {
     if(typeof window.ethereum !== 'undefined'){
       const provider = new ethers.providers.Web3Provider(window.ethereum); //we could use provier JsonRpcProvider()
       const contract = new ethers.Contract(usersAddress,Users.abi, provider)
       try {
         const user = await contract.getCurrentUser()
-        const item = await Promise.all(user.map(async i => {
-          let item = {
-            username: i.username,
-            userAddress : i.userAddress,
-            color: i.color
-          }
-          console.log('username:',i.username)
-          return item
-        }))
-        console.log(item)
-        setUsername(item.username);
+        let item = {
+          username: user.username,
+          userAddress : user.userAddress,
+          color: user.color
+        }
+        setUser(item);
         setLoadingState('loaded')
       }
       catch (err){
@@ -65,7 +60,7 @@ const Navbar = () => {
     <>
       <Nav>
         <NavMenu>
-          <a href="/"><img src={ivoryLogo} style={{maxWidth: "50%",marginLeft:""}}alt= "Ivory Fund" /></a>
+          <a href="/"><img src={ivoryLogo} style={{width: "50px",marginLeft:""}}alt= "Ivory Fund" /></a>
           <NavLink to='/' activeStyle>
             Home
           </NavLink>
@@ -79,7 +74,7 @@ const Navbar = () => {
         <div style={{display: "flex", alignItems: "center"}}>
           {loadingState === 'loaded'
           ?
-           username
+           < p style={{color: user.color}}> {user.username} </p>
           : account
           }
           <button class="imgButton" style={{width: "45px", marginLeft: "10px"}} onClick={logout}>

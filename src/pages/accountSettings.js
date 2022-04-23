@@ -21,13 +21,11 @@ class AccountSettings extends React.Component {
     event.preventDefault()
     if ( this.state.username  === '' && this.state.description  === '') return
     if (typeof window.ethereum !== 'undefined') {
-      console.log("Start user config")
       const provider = new ethers.providers.Web3Provider(window.ethereum);
       const signer = provider.getSigner()
       const contract = new ethers.Contract(usersAddress,Users.abi, signer)
       const transaction = await contract.createUser(this.state.username, this.state.color)
       await transaction.wait()
-      console.log("Finished user config")
       this.setState({redirect: true})
     }
     else console.log("Ethereum window undefined")
