@@ -70,12 +70,11 @@ const Navbar = () => {
           </NavLink>
         </NavMenu>
         <div style={{display: "flex", alignItems: "center"}}>
-          {loadingState === 'loaded'
+          {loadingState === 'loaded' && user.username !== ''
           ?
           <div class="tooltip" style={{color: user.color}}> {user.username}
             <span className="tooltiptext"> {user.userAddress} </span>
           </div>
-
           : account
           }
           <button class="imgButton" style={{width: "45px", marginLeft: "10px"}} onClick={logout}>

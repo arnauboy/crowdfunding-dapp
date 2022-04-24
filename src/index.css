@@ -110,7 +110,7 @@ h1 {
 .tooltip .tooltiptext {
   visibility: hidden;
   width: 350px;
-  background-color: green;
+  background-color: #1CA65A;
   color: #fff;
   text-align: center;
   border-radius: 6px;
