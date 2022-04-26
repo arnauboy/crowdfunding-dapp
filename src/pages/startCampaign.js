@@ -107,7 +107,9 @@ class StartCampaign extends React.Component {
               <label> Image  </label>
                 <input type = "file" class="form-control-file" onChange={this.captureFile}/>
             </div>
-            <input style={{color: 'green'}} type = 'submit' value="Start"/>
+            <div style = {{padding: "30px"}}>
+              <button class="submitButton" type = "submit">Start</button>
+            </div>
           </form>
         </div>
       </div>

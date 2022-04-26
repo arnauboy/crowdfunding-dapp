@@ -101,16 +101,18 @@ class AccountSettings extends React.Component {
                 <input type = "text"  class="form-control" style={{maxWidth: "100px", margin: "auto"}}value={this.state.color}  onChange = {(event) => this.setState({color: event.target.value})} />
             </div>
             <div>
-          <div style={ styles.swatch } onClick={ this.onClick }>
-            <div style={ styles.color } />
-          </div>
-          { this.state.showPicker ? <div style={ styles.popover }>
-            <div style={ styles.cover } onClick={ this.onClose }/>
-            <SketchPicker color={ this.state.color } onChange={ this.onChange } />
-          </div> : null }
+              <div style={ styles.swatch } onClick={ this.onClick }>
+                <div style={ styles.color } />
+              </div>
+              { this.state.showPicker ? <div style={ styles.popover }>
+                <div style={ styles.cover } onClick={ this.onClose }/>
+                <SketchPicker color={ this.state.color } onChange={ this.onChange } />
+              </div> : null }
 
-        </div>
-            <input type = 'submit' value="Confirm"/>
+            </div>
+            <div style = {{padding: "30px"}}>
+              <button class="submitButton" type = "submit">Confirm</button>
+            </div>
           </form>
         </div>
       </div>
