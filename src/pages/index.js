@@ -70,7 +70,7 @@ const Home = () => {
           {
             openCampaigns.map((campaign, i) => {
               return (
-              <div style={{maxWidth: "20%"}}>
+              <div style={{maxWidth: "40%", margin: "auto", marginTop: "20px"}}>
                 <div key={i} className="border shadow rounded-xl overflow-hidden">
                   <img src={`https://ipfs.io/ipfs/${campaign.ipfsHash}`} alt="Campaign" />
                   <div className="p-4">
@@ -83,7 +83,7 @@ const Home = () => {
                   </div>
                   <div className="p-4"  style={{backgroundColor: "#92C9A0"}} >
                     <p className="text-2xl mb-4 font-bold text-white">{campaign.fundsCollected} /{campaign.fundsRequested} MATIC</p>
-                    <button style={{backgroundColor: "purple"}} className="w-full bg-pink-500 text-white font-bold py-2 px-12 rounded" onClick={donateCampaign(campaign)}>Donate</button>
+                    <button style={{backgroundColor: "purple"}} className="w-20 bg-pink-500 text-white font-bold py-2 px-12 rounded" onClick={donateCampaign(campaign)}> + Information </button>
                   </div>
                 </div>
               </div>
