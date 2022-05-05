@@ -14,7 +14,7 @@ import {
 } from '../../config'
 import Users from '../../artifacts/contracts/Users.sol/Users.json'
 import { ethers } from 'ethers'
-import {useEffect, useState} from 'react'
+import {useState} from 'react'
 
 const logout = () => {
   setGlobalState("accountSignedIn",'')
@@ -26,8 +26,7 @@ const logout = () => {
 }
 
 const Navbar = () => {
-  //const [user, setUser] = useState('')
-  const [loadingState, setLoadingState] = useState('loaded')
+  const [loadingState, setLoadingState] = useState('not-loaded')
   const account = useGlobalState("accountSignedIn")[0];
   const username = useGlobalState("username")[0];
   const color = useGlobalState("color")[0];
@@ -54,33 +53,13 @@ const Navbar = () => {
         setGlobalState('color',item.color)
         window.sessionStorage.setItem('color', JSON.stringify(item.color));
         console.log("actualizado: ", item.username, item.color)
-      }
-      catch (err){
-        console.log("Error: " , err)
-      }
-    }
-  }
-
-  /*async function getUser() {
-    if(typeof window.ethereum !== 'undefined'){
-      const provider = new ethers.providers.Web3Provider(window.ethereum); //we could use provier JsonRpcProvider()
-      const contract = new ethers.Contract(usersAddress,Users.abi, provider)
-      try {
-        const user = await contract.getCurrentUser()
-        let item = {
-          username: user.username,
-          userAddress : user.userAddress,
-          color: user.color
-        }
-        setUser(item);
         setLoadingState('loaded')
       }
       catch (err){
         console.log("Error: " , err)
       }
     }
-  }*/
-
+  }
 
   return (
     <>

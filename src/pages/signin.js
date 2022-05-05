@@ -4,38 +4,10 @@ import {toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import metamaskLogo from '../images/metamask.png'
 import ivoryLogo from '../images/ivoryLogo.png'
-import Users from '../artifacts/contracts/Users.sol/Users.json'
-import {
-  usersAddress
-} from '../config'
-import { ethers } from 'ethers'
 
 const successToast = () => {
     toast.success("Succesfully signed in!",{ autoClose: 5000, position: toast.POSITION.TOP_RIGHT, toastId: "123"})
   };
-
-/*export async function getUser() {
-  if(typeof window.ethereum !== 'undefined'){
-    const provider = new ethers.providers.Web3Provider(window.ethereum); //we could use provier JsonRpcProvider()
-    const contract = new ethers.Contract(usersAddress,Users.abi, provider)
-    try {
-      const user = await contract.getCurrentUser()
-      let item = {
-        username: user.username,
-        userAddress : user.userAddress,
-        color: user.color
-      }
-      setGlobalState('username',item.username)
-      window.sessionStorage.setItem('username', JSON.stringify(item.username));
-      setGlobalState('color',item.color)
-      window.sessionStorage.setItem('color', JSON.stringify(item.color));
-      console.log("actualizado: ", item.username, item.color)
-    }
-    catch (err){
-      console.log("Error: " , err)
-    }
-  }
-} */
 
 export function getAccount() {
   //let web3;
@@ -88,7 +60,6 @@ function SignIn() {
   }
   return (
     <div style={{height: "400px",width: "1000px",
-    //background: "black",
     position: "fixed",
     top: "50%",
     left: "50%",
