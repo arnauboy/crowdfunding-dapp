@@ -19,21 +19,49 @@ import {useEffect, useState} from 'react'
 const logout = () => {
   setGlobalState("accountSignedIn",'')
   setGlobalState("currentNetwork",'')
+  setGlobalState("username",'')
   window.sessionStorage.removeItem('accountSignedIn')
   window.sessionStorage.removeItem('currentNetwork')
+  window.sessionStorage.removeItem('username')
 }
 
 const Navbar = () => {
-  const [user, setUser] = useState('')
-  const [loadingState, setLoadingState] = useState('not-loaded')
-  const account = useGlobalState("accountSignedIn");
+  //const [user, setUser] = useState('')
+  const [loadingState, setLoadingState] = useState('loaded')
+  const account = useGlobalState("accountSignedIn")[0];
+  const username = useGlobalState("username")[0];
+  const color = useGlobalState("color")[0];
   const navigate = useNavigate()
+  console.log('color:', color)
+  console.log('username: ', username)
 
-  useEffect(() => {
-    getUser() }, []
-  )
+  getUser()
 
+  //Same function as in signin.js. Hook calls can only be done from function component body
   async function getUser() {
+    if(typeof window.ethereum !== 'undefined'){
+      const provider = new ethers.providers.Web3Provider(window.ethereum); //we could use provier JsonRpcProvider()
+      const contract = new ethers.Contract(usersAddress,Users.abi, provider)
+      try {
+        const user = await contract.getCurrentUser()
+        let item = {
+          username: user.username,
+          userAddress : user.userAddress,
+          color: user.color
+        }
+        setGlobalState('username',item.username)
+        window.sessionStorage.setItem('username', JSON.stringify(item.username));
+        setGlobalState('color',item.color)
+        window.sessionStorage.setItem('color', JSON.stringify(item.color));
+        console.log("actualizado: ", item.username, item.color)
+      }
+      catch (err){
+        console.log("Error: " , err)
+      }
+    }
+  }
+
+  /*async function getUser() {
     if(typeof window.ethereum !== 'undefined'){
       const provider = new ethers.providers.Web3Provider(window.ethereum); //we could use provier JsonRpcProvider()
       const contract = new ethers.Contract(usersAddress,Users.abi, provider)
@@ -51,7 +79,7 @@ const Navbar = () => {
         console.log("Error: " , err)
       }
     }
-  }
+  }*/
 
 
   return (
@@ -62,6 +90,9 @@ const Navbar = () => {
           <NavLink to='/' activeStyle>
             Home
           </NavLink>
+          <NavLink to='/icos' activeStyle>
+            ICOs
+          </NavLink>
           <NavLink to='/closedCampaigns' activeStyle>
             Closed campaigns
           </NavLink>
@@ -70,10 +101,10 @@ const Navbar = () => {
           </NavLink>
         </NavMenu>
         <div style={{display: "flex", alignItems: "center"}}>
-          {loadingState === 'loaded' && user.username !== ''
+          {loadingState === 'loaded' && username !== ''
           ?
-          <div class="tooltip" style={{color: user.color}}> {user.username}
-            <span className="tooltiptext"> {user.userAddress} </span>
+          <div class="tooltip" style={{ color: color}}> {username}
+            <span className="tooltiptext"> {account} </span>
           </div>
           : account
           }

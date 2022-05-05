@@ -7,6 +7,7 @@ import Users from '../artifacts/contracts/Users.sol/Users.json'
 import { Navigate } from 'react-router'
 import { SketchPicker } from 'react-color'
 import reactCSS from 'reactcss'
+import getUser from './signin'
 
 class AccountSettings extends React.Component {
   constructor(props) {
@@ -48,6 +49,7 @@ class AccountSettings extends React.Component {
       const transaction = await contract.createUser(this.state.username, this.state.color)
       await transaction.wait()
       this.setState({redirect: true})
+      await getUser()
     }
     else console.log("Ethereum window undefined")
   }

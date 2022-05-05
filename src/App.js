@@ -9,6 +9,7 @@ import Config from './pages/config';
 import SignIn from './pages/signin';
 import StartCampaign from './pages/startCampaign'
 import AccountSettings from './pages/accountSettings'
+import ICOs from './pages/icos'
 import React from 'react';
 import {useGlobalState} from './state'
 import { ToastContainer } from 'react-toastify';
@@ -31,6 +32,7 @@ function App() {
           <Route path='/config' element={<Config />} />
           <Route path='/startCampaign' element={<StartCampaign />} />
           <Route path='/accountSettings' element={<AccountSettings />} />
+          <Route path='/icos' element={<ICOs />} />
       </Routes>
     </Router>
   )

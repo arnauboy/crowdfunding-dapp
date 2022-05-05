@@ -24,9 +24,6 @@ class StartCampaign extends React.Component {
     this.createCampaign = this.createCampaign.bind(this);
   }
 
-
-
-
   captureFile(event) {
     event.preventDefault()
     const file = event.target.files[0]
@@ -57,7 +54,8 @@ class StartCampaign extends React.Component {
         const provider = new ethers.providers.Web3Provider(window.ethereum);
         const signer = provider.getSigner()
         const contract = new ethers.Contract(crowdfundingAddress,FundMarket.abi, signer)
-        const transaction = await contract.createCampaign(ethers.utils.parseUnits(this.state.FundsRequested,'ether'),this.state.title,this.state.description,this.state.info,this.state.url,this.state.ipfsHash)
+        const transaction = await contract.createCampaign(ethers.utils.parseUnits(this.state.FundsRequested,'ether'),this.state.title,
+          this.state.description,this.state.info,this.state.url,this.state.ipfsHash)
         await transaction.wait()
         console.log("Finished creating campaign")
         this.setState({redirect: true})

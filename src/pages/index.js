@@ -5,7 +5,6 @@ import FundMarket from '../artifacts/contracts/Crowdfunding.sol/FundMarket.json'
 import {useGlobalState} from '../state'
 import {crowdfundingAddress} from "../config"
 import {useEffect, useState} from 'react'
-//import placeholder from "../images/placeholder-image.png"
 
 
 const Home = () => {
@@ -48,11 +47,6 @@ const Home = () => {
   }
 
   async function donateCampaign(campaign) {}
-
-  /*async function requestAccount() {
-    await window.ethereum.request({method: "eth_requestAccounts"});
-  }*/
-  console.log("Open campaigns: ", openCampaigns);
   let network = useGlobalState('currentNetwork')[0]
   if(network !== "0x539" ) {
     return (<Navigate to="/signin"/>);
@@ -66,24 +60,28 @@ const Home = () => {
       <h2> Open campaigns </h2>
       <div className="flex justify-center" style={{maxWidth: "60%", margin: 'auto', maxHeight: "100px"}}>
         <div className="px-4" style={{ maxWidth: '1600px' }}>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 pt-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
           {
             openCampaigns.map((campaign, i) => {
               return (
-              <div style={{maxWidth: "40%", margin: "auto", marginTop: "20px"}}>
-                <div key={i} className="border shadow rounded-xl overflow-hidden">
-                  <img src={`https://ipfs.io/ipfs/${campaign.ipfsHash}`} alt="Campaign" />
-                  <div className="p-4">
-                    <p style={{ height: '40px '}} className="text-2xl font-semibold">
-                      {campaign.title}
-                    </p>
-                    <div style={{ overflow:'hidden'}}>
-                      <p className="text-gray-400">{campaign.description} </p>
-                    </div>
+              <div style={{maxWidth: "60%", margin: "auto", marginTop: "20px"}}>
+                <div key={i} className="border shadow rounded-xl" style={{ display: 'flex'}}>
+                  <div style={{ float: 'left'}}>
+                    <img src={`https://ipfs.io/ipfs/${campaign.ipfsHash}`} alt="Campaign" />
                   </div>
-                  <div className="p-4"  style={{backgroundColor: "#92C9A0"}} >
-                    <p className="text-2xl mb-4 font-bold text-white">{campaign.fundsCollected} /{campaign.fundsRequested} MATIC</p>
-                    <button style={{backgroundColor: "purple"}} className="w-20 bg-pink-500 text-white font-bold py-2 px-12 rounded" onClick={donateCampaign(campaign)}> + Information </button>
+                  <div>
+                    <div className="p-4">
+                      <p style={{ height: '40px '}} className="text-2xl font-bold">
+                        {campaign.title}
+                      </p>
+                      <div style={{ overflow:'hidden'}}>
+                        <p className="text-gray-400">{campaign.description} </p>
+                      </div>
+                    </div>
+                    <div className="p-4"  style={{backgroundColor: "#92C9A0"}} >
+                      <p className="text-2xl mb-4 font-bold text-white">{campaign.fundsCollected} /{campaign.fundsRequested} MATIC</p>
+                      <button style={{backgroundColor: "purple"}} className="w-20 bg-pink-500 text-white font-bold py-2 px-12 rounded" onClick={donateCampaign(campaign)}> + Information </button>
+                    </div>
                   </div>
                 </div>
               </div>
