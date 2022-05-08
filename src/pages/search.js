@@ -1,6 +1,6 @@
 import React from 'react';
 
-const ClosedCampaigns = () => {
+const Search = () => {
   return (
     <div>
       <h1>Closed campaigns</h1>
@@ -8,4 +8,4 @@ const ClosedCampaigns = () => {
   );
 };
 
-export default ClosedCampaigns;
+export default Search;

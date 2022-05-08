@@ -72,8 +72,8 @@ const Navbar = () => {
           <NavLink to='/icos' activeStyle>
             ICOs
           </NavLink>
-          <NavLink to='/closedCampaigns' activeStyle>
-            Closed campaigns
+          <NavLink to='/search' activeStyle>
+            Search
           </NavLink>
           <NavLink to='/about' activeStyle>
             About

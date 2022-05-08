@@ -58,18 +58,18 @@ const Home = () => {
   return (
     <div>
       <h2> Open campaigns </h2>
-      <div className="flex justify-center" style={{maxWidth: "60%", margin: 'auto', maxHeight: "100px"}}>
-        <div className="px-4" style={{ maxWidth: '1600px' }}>
+      <div className="flex justify-center" style={{maxWidth: "40%", margin: 'auto', maxHeight: "100px"}}>
+
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
           {
             openCampaigns.map((campaign, i) => {
               return (
               <div style={{maxWidth: "60%", margin: "auto", marginTop: "20px"}}>
                 <div key={i} className="border shadow rounded-xl" style={{ display: 'flex'}}>
-                  <div style={{ float: 'left'}}>
+                  <div style={{ float: 'left', width: "50%"}}>
                     <img src={`https://ipfs.io/ipfs/${campaign.ipfsHash}`} alt="Campaign" />
                   </div>
-                  <div>
+                  <div style={{width: "50%"}}>
                     <div className="p-4">
                       <p style={{ height: '40px '}} className="text-2xl font-bold">
                         {campaign.title}
@@ -90,7 +90,7 @@ const Home = () => {
           }
           </div>
         </div>
-      </div>
+
     </div>
   );
 };
