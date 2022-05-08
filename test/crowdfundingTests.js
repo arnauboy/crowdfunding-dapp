@@ -7,12 +7,11 @@ describe("Crowdfunding", function () {
     const fundMarket = await FundMarket.deploy();
     await fundMarket.deployed();
 
-    //const auctionPrice = ethers.utils.parseUnits('100','ethers')
     await fundMarket.createCampaign(ethers.utils.parseUnits('100','ether'),'Ivory Fund','bla bla bla','bla bla bla', 'bla bla bla','ipfshash');
 
     const [_,donatorAddress] = await ethers.getSigners(); //We need an address for the donator user, not the one creating the campaign
 
-    await fundMarket.connect(donatorAddress).donateCampaign(0, { value: ethers.utils.parseUnits('10','ether')}); //Last {} is the message
+    await fundMarket.connect(donatorAddress).donateCampaign(0, { value: ethers.utils.parseUnits('99','ether')}); //Last {} is the message
 
     let items = await fundMarket.fetchCampaigns();
 
@@ -32,6 +31,7 @@ describe("Crowdfunding", function () {
       }
       return item;
     }))
-    console.log("Campaigns:", items);
+    expect(items).to.have.lengthOf(1)
+    expect(items[0].fundsReached).to.equal(false)
   });
 });

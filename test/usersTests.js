@@ -15,7 +15,9 @@ describe("Users", function() {
         color: item.color,
         address: item.userAddress
       }
-      console.log("Current user:", user);
+      expect(user.username).to.equal("username_prueba")
+      expect(user.color).to.equal("0x111111")
+      expect(user.address).to.equal(userAddress.address)
     });
     it("Should get user with no username and no color", async function () {
       const Users = await hre.ethers.getContractFactory("Users");
@@ -29,7 +31,7 @@ describe("Users", function() {
         color: item.color,
         address: item.userAddress
       }
-      console.log("User:", user);
-
+      expect(user.username).to.equal("")
+      expect(user.color).to.equal("")
     });
 });
