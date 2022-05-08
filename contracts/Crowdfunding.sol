@@ -99,6 +99,59 @@ contract FundMarket is ReentrancyGuard {
     return items;
   }
 
+   function contains(string calldata what, string memory where) private pure returns (bool )
+   {
+    bytes memory whatBytes = bytes (what);
+    bytes memory whereBytes = bytes (where);
+
+    require(whereBytes.length >= whatBytes.length);
+
+    bool found = false;
+    for (uint i = 0; i <= whereBytes.length - whatBytes.length; i++) {
+        bool flag = true;
+        for (uint j = 0; j < whatBytes.length; j++)
+            if (whereBytes [i + j] != whatBytes [j]) {
+                flag = false;
+                break;
+            }
+        if (flag) {
+            found = true;
+            break;
+        }
+    }
+    return found;
+  }
+
+  function fetchCampaignsByWord(string calldata searchWord) public view returns (FundingCampaign[] memory) {
+    uint itemCount = _itemIds.current();
+
+    //Returning dynamic-length array of struct is still a bit tricky in Solidity (even in the current 0.8 version)
+    //That's why we need to determine the count to create the fixed-length array afterwards
+
+    uint countOfMatchingCampaigns = 0;
+    for (uint i = 0; i < itemCount; i++) {
+      FundingCampaign memory currentItem = idToFundingCampaign[i];
+      if(contains(searchWord, currentItem.title)) {
+        countOfMatchingCampaigns += 1;
+      }
+    }
+
+    uint currentIndex = 0;
+
+
+      FundingCampaign[] memory items = new FundingCampaign[](countOfMatchingCampaigns);
+      if(countOfMatchingCampaigns > 0) {
+        for (uint i = 0; i < itemCount; i++) {
+          FundingCampaign memory currentItem = idToFundingCampaign[i];
+          if(contains(searchWord, currentItem.title)) {
+            items[currentIndex] = currentItem;
+          }
+          currentIndex += 1;
+        }
+      }
+      return items;
+  }
+
   function fetchMyCampaigns() public view returns (FundingCampaign[] memory) {
     uint itemCount = _itemIds.current();
     uint currentIndex = 0;

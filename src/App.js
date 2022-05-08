@@ -28,7 +28,7 @@ function App() {
       <Routes>
         <Route path='/' element={<Home />} />
           <Route path='/about' element={<About />} />
-          <Route path='/search' element={<Search />} />
+          <Route path='/search/:searchWord' element={<Search />} />
           <Route path='/config' element={<Config />} />
           <Route path='/startCampaign' element={<StartCampaign />} />
           <Route path='/accountSettings' element={<AccountSettings />} />

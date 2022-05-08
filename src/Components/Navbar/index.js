@@ -34,7 +34,7 @@ const Navbar = () => {
   console.log('color:', color)
   console.log('username: ', username)
 
-  getUser()
+  getUser() //Not using useEffect because it was not being updated when username and color are changed in global variables
 
   //Same function as in signin.js. Hook calls can only be done from function component body
   async function getUser() {
@@ -61,6 +61,12 @@ const Navbar = () => {
     }
   }
 
+  const searchCampaigns = (event) => {
+    if (event.key === 'Enter') {
+       navigate(`/search/${event.target.value}`)
+    }
+  }
+
   return (
     <>
       <Nav>
@@ -72,12 +78,13 @@ const Navbar = () => {
           <NavLink to='/icos' activeStyle>
             ICOs
           </NavLink>
-          <NavLink to='/search' activeStyle>
-            Search
-          </NavLink>
           <NavLink to='/about' activeStyle>
             About
           </NavLink>
+          <div class="input-group rounded">
+            <input type="search" class="form-control rounded" placeholder="Search..."
+             aria-label="Search" aria-describedby="search-addon" onKeyDown={searchCampaigns}  />
+          </div>
         </NavMenu>
         <div style={{display: "flex", alignItems: "center"}}>
           {loadingState === 'loaded' && username !== ''
