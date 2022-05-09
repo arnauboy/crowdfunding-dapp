@@ -27,6 +27,7 @@ const logout = () => {
 
 const Navbar = () => {
   const [loadingState, setLoadingState] = useState('not-loaded')
+  const [searchWord,setSearchWord] = useState('')
   const account = useGlobalState("accountSignedIn")[0];
   const username = useGlobalState("username")[0];
   const color = useGlobalState("color")[0];
@@ -63,7 +64,9 @@ const Navbar = () => {
 
   const searchCampaigns = (event) => {
     if (event.key === 'Enter') {
-       navigate(`/search/${event.target.value}`)
+      const word = event.target.value
+      setSearchWord('')
+      navigate(`/search/${word}`)
     }
   }
 
@@ -83,7 +86,7 @@ const Navbar = () => {
           </NavLink>
           <div class="input-group rounded">
             <input type="search" class="form-control rounded" placeholder="Search..."
-             aria-label="Search" aria-describedby="search-addon" onKeyDown={searchCampaigns}  />
+             aria-label="Search" aria-describedby="search-addon" value = {searchWord} onChange = {(event) => setSearchWord(event.target.value)} onKeyDown={searchCampaigns}  />
           </div>
         </NavMenu>
         <div style={{display: "flex", alignItems: "center"}}>

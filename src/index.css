@@ -55,6 +55,12 @@ h1 {
 
  }
 
+ .grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+}
+
 .button-24 {
   background: #FF4742;
   border: 1px solid #FF4742;

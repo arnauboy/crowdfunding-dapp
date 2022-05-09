@@ -45,9 +45,9 @@ const ICOs = () => {
   }
 
   return (
-    <div className="flex justify-center" style={{maxWidth: "40%", margin: 'auto', maxHeight: "100px"}}>
-
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+    <div>
+      <h2> Open ICOs </h2>
+      <div className="flex justify-center" style={{maxWidth: "40%", margin: 'auto', maxHeight: "100px"}}>
           <div style={{maxWidth: "60%", margin: "auto", marginTop: "20px"}}>
             <div className="border shadow rounded-xl" style={{ display: 'flex'}}>
               <div style={{ float: 'left', width: "50%"}}>
@@ -66,9 +66,8 @@ const ICOs = () => {
               </div>
             </div>
           </div>
-          </div>
-          </div>
-
+        </div>
+      </div>
   );
 }
 
