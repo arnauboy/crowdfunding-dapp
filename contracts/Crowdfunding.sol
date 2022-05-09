@@ -99,14 +99,15 @@ contract FundMarket is ReentrancyGuard {
     return items;
   }
 
-   function contains(string calldata what, string memory where) private pure returns (bool )
+   function contains(string memory what, string memory where) private pure returns (bool )
    {
     bytes memory whatBytes = bytes (what);
     bytes memory whereBytes = bytes (where);
 
-    require(whereBytes.length >= whatBytes.length);
-
     bool found = false;
+
+    if(whereBytes.length < whatBytes.length) return found;
+
     for (uint i = 0; i <= whereBytes.length - whatBytes.length; i++) {
         bool flag = true;
         for (uint j = 0; j < whatBytes.length; j++)
@@ -130,8 +131,8 @@ contract FundMarket is ReentrancyGuard {
 
     uint countOfMatchingCampaigns = 0;
     for (uint i = 0; i < itemCount; i++) {
-      FundingCampaign memory currentItem = idToFundingCampaign[i];
-      if(contains(searchWord, currentItem.title)) {
+      FundingCampaign storage currentItem1 = idToFundingCampaign[i];
+      if(contains(searchWord, currentItem1.title)) {
         countOfMatchingCampaigns += 1;
       }
     }
@@ -139,17 +140,17 @@ contract FundMarket is ReentrancyGuard {
     uint currentIndex = 0;
 
 
-      FundingCampaign[] memory items = new FundingCampaign[](countOfMatchingCampaigns);
-      if(countOfMatchingCampaigns > 0) {
-        for (uint i = 0; i < itemCount; i++) {
-          FundingCampaign memory currentItem = idToFundingCampaign[i];
-          if(contains(searchWord, currentItem.title)) {
-            items[currentIndex] = currentItem;
-          }
+    FundingCampaign[] memory items = new FundingCampaign[](countOfMatchingCampaigns);
+    if(countOfMatchingCampaigns > 0) {
+      for (uint i = 0; i < itemCount && currentIndex < countOfMatchingCampaigns; i++) {
+        FundingCampaign memory currentItem2 = idToFundingCampaign[i];
+        if(contains(searchWord, currentItem2.title)) {
+          items[currentIndex] = currentItem2;
           currentIndex += 1;
         }
       }
-      return items;
+    }
+    return items;
   }
 
   function fetchMyCampaigns() public view returns (FundingCampaign[] memory) {
