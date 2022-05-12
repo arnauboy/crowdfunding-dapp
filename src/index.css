@@ -45,15 +45,22 @@ h1 {
   text-align: center;
  }
 
- h2 { color: #92C9A0; font-size: 30px; font-weight: 300; line-height: 32px; margin: 0 0 72px; text-align: center; }
+ h2 { color: #92C9A0;
+      font-size: 30px;
+      font-weight: 300;
+      line-height: 32px;
+      margin: 0 0 72px;
+      text-align: center;
+  }
 
- input {
-
- }
-
- textarea {
-
- }
+ hr {
+    display: block;
+    height: 1px;
+    border: 0;
+    border-top: 1px solid #ccc;
+    margin: 1em 0;
+    padding: 0;
+}
 
  .grid {
   display: grid;

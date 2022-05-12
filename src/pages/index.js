@@ -1,5 +1,5 @@
 import React from 'react';
-import {Navigate} from 'react-router-dom'
+import {Navigate, useNavigate} from 'react-router-dom'
 import { ethers } from 'ethers'
 import FundMarket from '../artifacts/contracts/Crowdfunding.sol/FundMarket.json'
 import {useGlobalState} from '../state'
@@ -7,9 +7,11 @@ import {crowdfundingAddress} from "../config"
 import {useEffect, useState} from 'react'
 
 
+
 const Home = () => {
   const [openCampaigns, setOpenCampaigns] = useState([])
   const [loadingState, setLoadingState] = useState('not-loaded')
+  const navigate = useNavigate()
 
   useEffect(() => {
     loadCampaigns() }, []
@@ -46,7 +48,6 @@ const Home = () => {
     }
   }
 
-  async function donateCampaign(campaign) {}
   let network = useGlobalState('currentNetwork')[0]
   if(network !== "0x539" ) {
     return (<Navigate to="/signin"/>);
@@ -64,7 +65,7 @@ const Home = () => {
             {
               openCampaigns.map((campaign, i) => {
                 return (
-                    <div key={i} className="border shadow rounded-xl" style={{ display: 'flex'}}>
+                  <div key={i} className="border shadow rounded-xl" style={{ display: 'flex'}}>
                     <div style={{ float: 'left', width: "50%", margin: "23px"}}>
                       <img src={`https://ipfs.io/ipfs/${campaign.ipfsHash}`} alt="Campaign" />
                     </div>
@@ -77,11 +78,11 @@ const Home = () => {
                       </div>
                       <div className="p-2"  style={{backgroundColor: "#FFFFFF", maxHeight: "50%"}} >
                         <p className="text-2xl mb-2 font-bold text-black">{campaign.fundsCollected} /{campaign.fundsRequested} MATIC</p>
-                        <button style={{backgroundColor: "#92C9A0"}} className=" text-white font-bold py-2 px-12 rounded" onClick={donateCampaign(campaign)}>
-                            <div style={{padding: "5px"}}>
+                        <button style={{backgroundColor: "#92C9A0"}} className=" text-white font-bold py-2 px-12 rounded" onClick={(event) => {  navigate(`/campaign/${campaign.itemId}`)}}>
+                          <div style={{padding: "5px"}}>
                             Information
-                            </div>
-                          </button>
+                          </div>
+                        </button>
                       </div>
                     </div>
                   </div>

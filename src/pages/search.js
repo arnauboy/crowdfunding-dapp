@@ -1,6 +1,6 @@
 import React from 'react';
 import {
-  useParams
+  useParams, useNavigate
 } from "react-router-dom";
 import FundMarket from '../artifacts/contracts/Crowdfunding.sol/FundMarket.json'
 import {crowdfundingAddress} from "../config"
@@ -11,6 +11,7 @@ const Search = () => {
   // We can use the `useParams` hook here to access
   // the dynamic pieces of the URL.
   let { searchWord } = useParams();
+  const navigate = useNavigate();
 
   const [matchingCampaigns, setMatchingCampaigns] = useState([])
   const [loadingState, setLoadingState] = useState('not-loaded')
@@ -52,8 +53,6 @@ const Search = () => {
     searchCampaignsByWord(searchWord) }, [searchWord]
   )
 
-  async function donateCampaign(campaign) {}
-
   if (loadingState === 'loaded' && !matchingCampaigns.length) return(
     <h2> No matching campaigns with search word: {searchWord} </h2>
   )
@@ -66,27 +65,27 @@ const Search = () => {
             {
               matchingCampaigns.map((campaign, i) => {
                 return (
-                <div style={{ marginTop: "20px"}}>
                   <div key={i} className="border shadow rounded-xl" style={{ display: 'flex'}}>
-                    <div style={{ float: 'left', width: "50%"}}>
+                    <div style={{ float: 'left', width: "50%", margin: "23px"}}>
                       <img src={`https://ipfs.io/ipfs/${campaign.ipfsHash}`} alt="Campaign" />
                     </div>
                     <div style={{width: "50%"}}>
-                      <div className="p-4">
-                        <p style={{ height: '40px '}} className="text-2xl font-bold">
+                      <div style = {{fontWeight: "bold", paddingLeft: "10px", paddingRight: "10px",  paddingTop: "23px"}}>
                           {campaign.title}
-                        </p>
-                        <div style={{ overflow:'hidden'}}>
-                          <p className="text-gray-400">{campaign.description} </p>
-                        </div>
                       </div>
-                      <div className="p-4"  style={{backgroundColor: "#92C9A0"}} >
-                        <p className="text-2xl mb-4 font-bold text-white">{campaign.fundsCollected} /{campaign.fundsRequested} MATIC</p>
-                        <button style={{backgroundColor: "purple"}} className="w-20 bg-pink-500 text-white font-bold py-2 px-12 rounded" onClick={donateCampaign(campaign)}> + Information </button>
+                      <div style = {{fontWeight: "normal", paddingLeft: "10px", paddingTop: "10px", paddingRight: "10px",}}>
+                          {campaign.description}
+                      </div>
+                      <div className="p-2"  style={{backgroundColor: "#FFFFFF", maxHeight: "50%"}} >
+                        <p className="text-2xl mb-2 font-bold text-black">{campaign.fundsCollected} /{campaign.fundsRequested} MATIC</p>
+                        <button style={{backgroundColor: "#92C9A0"}} className=" text-white font-bold py-2 px-12 rounded" onClick={(event) => {  navigate(`/campaign/${campaign.itemId}`)}}>
+                          <div style={{padding: "5px"}}>
+                            Information
+                          </div>
+                        </button>
                       </div>
                     </div>
                   </div>
-                </div>
               )
               })
             }

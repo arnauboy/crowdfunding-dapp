@@ -78,7 +78,7 @@ class StartCampaign extends React.Component {
                 <input type = "text"  class="form-control" value={this.state.title} onChange = {(event) => this.setState({title: event.target.value})} />
             </div>
             <div class="form-group">
-              <label> *Description </label>
+              <label> *Short description </label>
                 <input type = "text"  class="form-control" value={this.state.description}  onChange = {(event) => this.setState({description: event.target.value})} />
             </div>
             <div class="form-group">

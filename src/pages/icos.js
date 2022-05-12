@@ -31,6 +31,8 @@ const ICOs = () => {
         setIvoryTotalSupply(totalSupply.toString());
         const symbol = await contract.symbol();
         setIvorySymbol(symbol.toString())
+
+        //ToDo: create object
       }
       catch (err){
         console.log("Error: " , err)
