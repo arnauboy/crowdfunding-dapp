@@ -7,7 +7,6 @@ import Users from '../artifacts/contracts/Users.sol/Users.json'
 import { Navigate } from 'react-router'
 import { SketchPicker } from 'react-color'
 import reactCSS from 'reactcss'
-import getUser from './signin'
 
 class AccountSettings extends React.Component {
   constructor(props) {
@@ -41,7 +40,7 @@ class AccountSettings extends React.Component {
 
   async configUser(event) {
     event.preventDefault()
-    if ( this.state.username  === '' && this.state.description  === '') return
+    if ( this.state.username  === '') return
     if (typeof window.ethereum !== 'undefined') {
       const provider = new ethers.providers.Web3Provider(window.ethereum);
       const signer = provider.getSigner()
@@ -49,7 +48,6 @@ class AccountSettings extends React.Component {
       const transaction = await contract.createUser(this.state.username, this.state.color)
       await transaction.wait()
       this.setState({redirect: true})
-      await getUser()
     }
     else console.log("Ethereum window undefined")
   }

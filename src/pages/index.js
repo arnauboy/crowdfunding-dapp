@@ -12,6 +12,9 @@ const Home = () => {
   const [openCampaigns, setOpenCampaigns] = useState([])
   const [loadingState, setLoadingState] = useState('not-loaded')
   const navigate = useNavigate()
+  const provider = new ethers.providers.Web3Provider(window.ethereum);
+  const accounts = provider.listAccounts()
+  console.log(accounts)
 
   useEffect(() => {
     loadCampaigns() }, []
@@ -73,12 +76,12 @@ const Home = () => {
                       <div style = {{fontWeight: "bold", paddingLeft: "10px", paddingRight: "10px",  paddingTop: "23px"}}>
                           {campaign.title}
                       </div>
-                      <div style = {{fontWeight: "normal", paddingLeft: "10px", paddingTop: "10px", paddingRight: "10px",}}>
+                      <div style = {{fontWeight: "normal", paddingLeft: "10px", paddingTop: "10px", paddingRight: "10px"}}>
                           {campaign.description}
                       </div>
                       <div className="p-2"  style={{backgroundColor: "#FFFFFF", maxHeight: "50%"}} >
                         <p className="text-2xl mb-2 font-bold text-black">{campaign.fundsCollected} /{campaign.fundsRequested} MATIC</p>
-                        <button style={{backgroundColor: "#92C9A0"}} className=" text-white font-bold py-2 px-12 rounded" onClick={(event) => {  navigate(`/campaign/${campaign.itemId}`)}}>
+                        <button style={{backgroundColor: "#92C9A0"}} className=" text-white font-bold py-2 px-12 rounded" onClick={(event) => {  navigate(`/campaigns/${campaign.itemId}`)}}>
                           <div style={{padding: "5px"}}>
                             Information
                           </div>

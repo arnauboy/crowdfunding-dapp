@@ -20,9 +20,11 @@ const logout = () => {
   setGlobalState("accountSignedIn",'')
   setGlobalState("currentNetwork",'')
   setGlobalState("username",'')
+  setGlobalState("color",'')
   window.sessionStorage.removeItem('accountSignedIn')
   window.sessionStorage.removeItem('currentNetwork')
   window.sessionStorage.removeItem('username')
+  window.sessionStorage.removeItem('color')
 }
 
 const Navbar = () => {
@@ -39,16 +41,18 @@ const Navbar = () => {
 
   //Same function as in signin.js. Hook calls can only be done from function component body
   async function getUser() {
+    console.log("get user is executed")
     if(typeof window.ethereum !== 'undefined'){
       const provider = new ethers.providers.Web3Provider(window.ethereum); //we could use provier JsonRpcProvider()
       const contract = new ethers.Contract(usersAddress,Users.abi, provider)
       try {
-        const user = await contract.getCurrentUser()
+        const user = await contract.getUser(account)
         let item = {
           username: user.username,
           userAddress : user.userAddress,
           color: user.color
         }
+        console.log("user logged in", item)
         setGlobalState('username',item.username)
         window.sessionStorage.setItem('username', JSON.stringify(item.username));
         setGlobalState('color',item.color)
@@ -84,23 +88,23 @@ const Navbar = () => {
           <NavLink to='/about' activeStyle>
             About
           </NavLink>
-          <div class="input-group rounded">
-            <input type="search" class="form-control rounded" placeholder="Search..."
+          <div className="input-group rounded">
+            <input type="search" className="form-control rounded" placeholder="Search..."
              aria-label="Search" aria-describedby="search-addon" value = {searchWord} onChange = {(event) => setSearchWord(event.target.value)} onKeyDown={searchCampaigns}  />
           </div>
         </NavMenu>
         <div style={{display: "flex", alignItems: "center"}}>
           {loadingState === 'loaded' && username !== ''
           ?
-          <div class="tooltip" style={{ color: color}}> {username}
+          <div className="tooltip" style={{ color: color}}> {username}
             <span className="tooltiptext"> {account} </span>
           </div>
           : account
           }
-          <button class="imgButton" style={{width: "45px", marginLeft: "10px"}} onClick={logout}>
+          <button className="imgButton" style={{width: "45px", marginLeft: "10px"}} onClick={logout}>
             <img style={{maxWidth: '50%'}} src ={logoutImg} alt="logout"/>
           </button>
-          <button class="imgButton" style={{width: "45px", marginLeft: "-10px"}} onClick={() => navigate('/accountSettings')}>
+          <button className="imgButton" style={{width: "45px", marginLeft: "-10px"}} onClick={() => navigate('/accountSettings')}>
             <img style={{maxWidth: '70%'}} src ={userSettings} alt="settings"/>
           </button>
         </div>

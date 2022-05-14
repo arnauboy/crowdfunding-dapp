@@ -9,6 +9,18 @@ const successToast = () => {
     toast.success("Succesfully signed in!",{ autoClose: 5000, position: toast.POSITION.TOP_RIGHT, toastId: "123"})
   };
 
+  const logout = () => {
+    setGlobalState("accountSignedIn",'')
+    setGlobalState("currentNetwork",'')
+    setGlobalState("username",'')
+    setGlobalState("color",'')
+    window.sessionStorage.removeItem('accountSignedIn')
+    window.sessionStorage.removeItem('currentNetwork')
+    window.sessionStorage.removeItem('username')
+    window.sessionStorage.removeItem('color')
+  }
+
+
 export function getAccount() {
   //let web3;
   let setEventListener=false;
@@ -18,6 +30,7 @@ export function getAccount() {
   let network;
   window.ethereum ?
   window.ethereum.request({method: "eth_requestAccounts"}).then((accounts) => {
+    console.log(accounts)
    setGlobalState('accountSignedIn',accounts[0])
    window.sessionStorage.setItem('accountSignedIn', JSON.stringify(accounts[0]));
    //web3 = new ethers.providers.Web3Provider(window.ethereum)
@@ -35,13 +48,14 @@ export function getAccount() {
    // Set event listeners
    if (!setEventListener) {
        window.ethereum.on('accountsChanged', function () {
-           getAccount()
-       })
+        setEventListener=true;
+        logout()
 
-       window.ethereum.on('chainChanged', function () {
-           getAccount()
        })
-       setEventListener = true
+       window.ethereum.on('chainChanged', function () {
+        setEventListener=true;
+        logout()
+       })
    }
   }).catch((err) => console.log(err))
   : console.log("Please install MetaMask")

@@ -78,7 +78,7 @@ const Search = () => {
                       </div>
                       <div className="p-2"  style={{backgroundColor: "#FFFFFF", maxHeight: "50%"}} >
                         <p className="text-2xl mb-2 font-bold text-black">{campaign.fundsCollected} /{campaign.fundsRequested} MATIC</p>
-                        <button style={{backgroundColor: "#92C9A0"}} className=" text-white font-bold py-2 px-12 rounded" onClick={(event) => {  navigate(`/campaign/${campaign.itemId}`)}}>
+                        <button style={{backgroundColor: "#92C9A0"}} className=" text-white font-bold py-2 px-12 rounded" onClick={(event) => {  navigate(`/campaigns/${campaign.itemId}`)}}>
                           <div style={{padding: "5px"}}>
                             Information
                           </div>

@@ -7,8 +7,6 @@ import { ethers } from 'ethers'
 import FundMarket from '../artifacts/contracts/Crowdfunding.sol/FundMarket.json'
 import {crowdfundingAddress} from "../config"
 import {toast } from 'react-toastify';
-import {useNavigate} from 'react-router-dom'
-import {setGlobalState,useGlobalState} from '../state'
 
 const successDonationToast = () => {
     toast.success("Succesfully donated!",{ autoClose: 5000, position: toast.POSITION.TOP_RIGHT, toastId: "123"})
@@ -22,7 +20,6 @@ const Campaign = () => {
   const [campaign, setCampaign] = useState([])
   const [fundsPercentage, setFundsPercentage] = useState(0)
   const [donation, setDonation] = useState("0")
-  const navigate = useNavigate()
 
   let { id } = useParams();
 
@@ -38,7 +35,6 @@ const Campaign = () => {
       try {
       const transaction = await contract.donateCampaign(id, {value: ethers.utils.parseUnits(donation,'ether')})
       await transaction.wait()
-      console.log("Finished donating to campaign")
       successDonationToast()
       await loadCampaign(id)
       }

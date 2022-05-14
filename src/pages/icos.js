@@ -5,7 +5,7 @@ import IvoryICO from '../artifacts/contracts/ivoryICO.sol/ICO.json'
 import {useEffect, useState} from 'react'
 import { ethers } from 'ethers'
 import {useGlobalState} from '../state'
-import {Navigate} from 'react-router-dom'
+import {Navigate, useNavigate} from 'react-router-dom'
 
 
 const ICOs = () => {
@@ -13,6 +13,7 @@ const ICOs = () => {
   const [ivoryLeftSupply, setIvoryLeftSupply] = useState([])
   const [ivoryTotalSupply, setIvoryTotalSupply] = useState([])
   const [ivorySymbol, setIvorySymbol] = useState([])
+  const navigate = useNavigate()
 
   useEffect(() => {
     loadICOs() }, []
@@ -40,7 +41,6 @@ const ICOs = () => {
     }
   }
 
-  async function infoICO() {}
   let network = useGlobalState('currentNetwork')[0]
   if(network !== "0x539" ) {
     return (<Navigate to="/signin"/>);
@@ -63,7 +63,7 @@ const ICOs = () => {
                 </div>
                 <div className="p-4"  style={{backgroundColor: "#92C9A0"}} >
                   <p className="text-2xl mb-4 font-bold text-white">Tokens left to be sold: {ivoryLeftSupply} of {ivoryTotalSupply} {ivorySymbol}</p>
-                  <button style={{backgroundColor: "purple"}} className="w-20 bg-pink-500 text-white font-bold py-2 px-12 rounded" onClick={infoICO()}> + Information </button>
+                  <button style={{backgroundColor: "purple"}} className="w-20 bg-pink-500 text-white font-bold py-2 px-12 rounded" onClick={(event) => {  navigate(`/icos/ivoryICO`)}}> + Information </button>
                 </div>
               </div>
             </div>
