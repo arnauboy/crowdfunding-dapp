@@ -5,11 +5,17 @@ import {useEffect, useState} from 'react'
 import {ivoryICOAddress} from "../config"
 import ICO from '../artifacts/contracts/ivoryICO.sol/ICO.json'
 import ivoryCoinLogo from '../images/ivoyCoin.png'
+import {useGlobalState} from '../state'
+
 
 const successBuyToast = () => {
     toast.success("Succesfully bought!",{ autoClose: 5000, position: toast.POSITION.TOP_RIGHT, toastId: "123"})
   };
 
+const successWithdrawToast = () => {
+    toast.success("Succesfully withdrawn!",{ autoClose: 5000, position: toast.POSITION.TOP_RIGHT, toastId: "123"})
+  };
+  
 const failedBuyToast = () => {
     toast.error("Failed to buy",{ autoClose: 5000, position: toast.POSITION.TOP_RIGHT, toastId: "123"})
   };
@@ -17,10 +23,11 @@ const IvoryICO = () => {
   const [ico, setICO] = useState([])
   const [fundsPercentage, setFundsPercentage] = useState(0)
   const [donation, setDonation] = useState("0")
-
+  const [withdraw, setWithdraw] = useState("0")
+  const account = useGlobalState("accountSignedIn")[0];
 
   useEffect(() => {
-    loadICO() }, []
+    loadICO() }
   )
 
   async function donateico(donation) {
@@ -43,6 +50,24 @@ const IvoryICO = () => {
     else console.log("Ethereum window undefined")
 }
 
+async function withdrawEther(withdraw) {
+  if(typeof window.ethereum !== 'undefined' && withdraw !== "0" ){
+    const provider = new ethers.providers.Web3Provider(window.ethereum); //we could use provier JsonRpcProvider()
+    const signer = provider.getSigner()
+    const contract = new ethers.Contract(ivoryICOAddress,ICO.abi, signer)
+    try {
+    const transaction = await contract.withdraw( ethers.utils.parseUnits(withdraw,'ether'))
+    await transaction.wait()
+    setWithdraw("0")
+    successWithdrawToast()
+    }
+    catch (err){
+      console.log("Error: " , err)
+    }
+  }
+  else console.log("Ethereum window undefined")
+}
+
   async function loadICO() {
     if(typeof window.ethereum !== 'undefined'){
       const provider = new ethers.providers.Web3Provider(window.ethereum); //we could use provier JsonRpcProvider()
@@ -60,18 +85,17 @@ const IvoryICO = () => {
         const rate = await contract.rate();
         const item = {
           name: name,
-          leftSupply:  leftSupply.toString(),
-          totalSupply: totalSupply.toString(),
+          leftSupply:  ethers.utils.formatUnits(leftSupply.toString(), 'ether'), //format as ether because my token has 10 ** 18 decimals
+          totalSupply: ethers.utils.formatUnits(totalSupply.toString(), 'ether'),
           symbol: symbol,
           description: description,
           info: info,
           url: url,
           title: title,
-          owner: owner,
+          owner: owner.toLowerCase(),
           rate: rate
 
         }
-        console.log("item", item)
         setICO(item);
         setFundsPercentage((item.leftSupply / item.totalSupply) * 100)
       }
@@ -96,23 +120,39 @@ const IvoryICO = () => {
           </div>
         </div>
       </div>
-      <div style = {{paddingTop: "30px", display: "flex"}}>
-        <input
-          style = {{ width: "30%", float: "left"}}
-          type="number"
-          class="form-control"
-          min={0}
-          max={ico.totalSupply}
-          step={1}
-          value={donation}
-          onChange={e => setDonation(e.target.value)}
-          />
+      {ico.owner !== account
+        ?
+        <div style = {{paddingTop: "30px", display: "flex"}}>
+          <input
+            style = {{ width: "30%", float: "left"}}
+            type="number"
+            class="form-control"
+            min={0}
+            max={ico.totalSupply}
+            step={1}
+            value={donation}
+            onChange={e => setDonation(e.target.value)}
+            />
+            <p style = {{padding: "5px"}}>
+                = {donation / ico.rate } MATIC
+            </p>
+            <button style = {{marginLeft: "20px"}}class="submitButton" onClick = {() => donateico(donation)}>Buy tokens</button>
+            </div>
+        : <div style = {{paddingTop: "30px", display: "flex"}}>
+          <input
+            style = {{ width: "30%", float: "left"}}
+            type="number"
+            class="form-control"
+            min={0}
+            max={ico.totalSupply / ico.rate}
+            step={0.01}
+            value={withdraw}
+            onChange={e => setWithdraw(e.target.value)}
+            />
+            <button style = {{marginLeft: "20px"}} class="submitButton" onClick = {() => withdrawEther(withdraw)}>Withdraw ETH</button>
+            </div>
+    }
 
-          <p style = {{padding: "5px"}}>
-              = {donation / ico.rate } MATIC
-          </p>
-          <button style = {{marginLeft: "20px"}}class="submitButton" onClick = {() => donateico(donation)}>Buy tokens</button>
-      </div>
       <div style = {{paddingTop: "30px", fontSize: "20px" }} >
         Supply left: {ico.leftSupply} of {ico.totalSupply} {ico.symbol}
         <div style= {{postion: "relative", display:"flex", justifyContent: "flex-end", border: "1px solid green "}} >
@@ -141,10 +181,13 @@ const IvoryICO = () => {
         </div>
       </div>
       <div style = {{paddingTop: "30px"}} >
-        <p style = {{fontSize: "20px"}}> Owner </p>
+        <p style = {{fontSize: "20px"}}> Adddresses </p>
         <hr/>
         <div>
-          {ico.owner}
+          Owner: {ico.owner}
+        </div>
+        <div>
+          Contract: {ivoryICOAddress}
         </div>
       </div>
     </div>

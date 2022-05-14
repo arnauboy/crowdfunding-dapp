@@ -7,7 +7,7 @@ async function main() {
   console.log("Crowdfunding deployed to:", crowdfunding.address);
 
   const IvoryICO = await hre.ethers.getContractFactory("ICO");
-  const ivoryICO = await IvoryICO.deploy("0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",10000,100);
+  const ivoryICO = await IvoryICO.deploy("0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266",10000,100);
   await ivoryICO.deployed();
   console.log("IvoryICO deployed to:", ivoryICO.address);
 
