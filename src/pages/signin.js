@@ -22,6 +22,11 @@ const successToast = () => {
 
 
 export function getAccount() {
+  logout()
+  window.sessionStorage.removeItem('accountSignedIn')
+  window.sessionStorage.removeItem('currentNetwork')
+  window.sessionStorage.removeItem('username')
+  window.sessionStorage.removeItem('color')
   //let web3;
   let setEventListener=false;
   const correctNetwork = "0x539" //hardhat chainId
@@ -30,10 +35,9 @@ export function getAccount() {
   let network;
   window.ethereum ?
   window.ethereum.request({method: "eth_requestAccounts"}).then((accounts) => {
-    console.log(accounts)
+    console.log("account signed in", accounts)
    setGlobalState('accountSignedIn',accounts[0])
    window.sessionStorage.setItem('accountSignedIn', JSON.stringify(accounts[0]));
-   //web3 = new ethers.providers.Web3Provider(window.ethereum)
    network = window.ethereum.chainId;
    setGlobalState('currentNetwork', network)
    window.sessionStorage.setItem('currentNetwork', JSON.stringify(network));
@@ -48,14 +52,13 @@ export function getAccount() {
    // Set event listeners
    if (!setEventListener) {
        window.ethereum.on('accountsChanged', function () {
-        setEventListener=true;
-        logout()
+        getAccount()
 
        })
        window.ethereum.on('chainChanged', function () {
-        setEventListener=true;
-        logout()
+         getAccount()
        })
+       setEventListener = true
    }
   }).catch((err) => console.log(err))
   : console.log("Please install MetaMask")
@@ -87,19 +90,19 @@ function SignIn() {
           <img style={{maxWidth: "50%",float: "left", marginTop: "-100px"}} src ={ivoryLogo} alt="MetamaskLogo"/>
         </div>
         <div>
-          <p class="alert alert-info" role="alert" style={{ maxWidth: "50%", float: "right"}}>
-          If you have not installed the Metamask plugin yet, install it <a href="https://chrome.google.com/webstore/detail/metamask/nkbihfbeogaeaoehlefnkodbefgpgknn?hl=ca" class="alert-link">here</a>.
-           To add Polygon Network follow this <a href="https://docs.polygon.technology/docs/develop/metamask/config-polygon-on-metamask/" class="alert-link"> documentation</a>.
+          <p className = "alert alert-info" role="alert" style={{ maxWidth: "50%", float: "right"}}>
+          If you have not installed the Metamask plugin yet, install it <a href="https://chrome.google.com/webstore/detail/metamask/nkbihfbeogaeaoehlefnkodbefgpgknn?hl=ca" className = "alert-link">here</a>.
+           To add Polygon Network follow this <a href="https://docs.polygon.technology/docs/develop/metamask/config-polygon-on-metamask/" className = "alert-link"> documentation</a>.
           </p>
           <div style = {{ maxWidth: "50%", float: "right"}}>
-            <button class="button-24"  onClick={getAccount}>
+            <button className = "button-24"  onClick={getAccount}>
               <img style={{maxWidth: '15%'}} src ={metamaskLogo} alt="MetamaskLogo"/> Connect Metamask Wallet
             </button>
           </div>
           {triedConnection
           ? correctNetwork
                   ? <> </>
-                  :<div style={{maxWidth: '50%',float: "right", marginTop: '30px'}} class="alert alert-warning" role="alert">
+                  :<div style={{maxWidth: '50%',float: "right", marginTop: '30px'}} className = "alert alert-warning" role="alert">
                     Oops, wrong network! You should connect Metamask to Polygon Mainnet Network!
                   </div>
           : <> </>

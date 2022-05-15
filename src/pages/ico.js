@@ -15,7 +15,7 @@ const successBuyToast = () => {
 const successWithdrawToast = () => {
     toast.success("Succesfully withdrawn!",{ autoClose: 5000, position: toast.POSITION.TOP_RIGHT, toastId: "123"})
   };
-  
+
 const failedBuyToast = () => {
     toast.error("Failed to buy",{ autoClose: 5000, position: toast.POSITION.TOP_RIGHT, toastId: "123"})
   };
@@ -126,7 +126,7 @@ async function withdrawEther(withdraw) {
           <input
             style = {{ width: "30%", float: "left"}}
             type="number"
-            class="form-control"
+            className="form-control"
             min={0}
             max={ico.totalSupply}
             step={1}
@@ -136,20 +136,20 @@ async function withdrawEther(withdraw) {
             <p style = {{padding: "5px"}}>
                 = {donation / ico.rate } MATIC
             </p>
-            <button style = {{marginLeft: "20px"}}class="submitButton" onClick = {() => donateico(donation)}>Buy tokens</button>
+            <button style = {{marginLeft: "20px"}} className = "submitButton" onClick = {() => donateico(donation)}>Buy tokens</button>
             </div>
         : <div style = {{paddingTop: "30px", display: "flex"}}>
           <input
             style = {{ width: "30%", float: "left"}}
-            type="number"
-            class="form-control"
-            min={0}
-            max={ico.totalSupply / ico.rate}
-            step={0.01}
-            value={withdraw}
-            onChange={e => setWithdraw(e.target.value)}
+            type = "number"
+            className = "form-control"
+            min = {0}
+            max = {ico.totalSupply / ico.rate}
+            step = {0.01}
+            value = {withdraw}
+            onChange = {e => setWithdraw(e.target.value)}
             />
-            <button style = {{marginLeft: "20px"}} class="submitButton" onClick = {() => withdrawEther(withdraw)}>Withdraw ETH</button>
+            <button style = {{marginLeft: "20px"}} className = "submitButton" onClick = {() => withdrawEther(withdraw)}>Withdraw ETH</button>
             </div>
     }
 

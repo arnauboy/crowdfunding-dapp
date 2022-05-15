@@ -12,9 +12,6 @@ const Home = () => {
   const [openCampaigns, setOpenCampaigns] = useState([])
   const [loadingState, setLoadingState] = useState('not-loaded')
   const navigate = useNavigate()
-  const provider = new ethers.providers.Web3Provider(window.ethereum);
-  const accounts = provider.listAccounts()
-  console.log(accounts)
 
   useEffect(() => {
     loadCampaigns() }, []

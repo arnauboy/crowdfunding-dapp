@@ -34,14 +34,11 @@ const Navbar = () => {
   const username = useGlobalState("username")[0];
   const color = useGlobalState("color")[0];
   const navigate = useNavigate()
-  console.log('color:', color)
-  console.log('username: ', username)
 
   getUser() //Not using useEffect because it was not being updated when username and color are changed in global variables
 
   //Same function as in signin.js. Hook calls can only be done from function component body
   async function getUser() {
-    console.log("get user is executed")
     if(typeof window.ethereum !== 'undefined'){
       const provider = new ethers.providers.Web3Provider(window.ethereum); //we could use provier JsonRpcProvider()
       const contract = new ethers.Contract(usersAddress,Users.abi, provider)
@@ -52,12 +49,10 @@ const Navbar = () => {
           userAddress : user.userAddress,
           color: user.color
         }
-        console.log("user logged in", item)
         setGlobalState('username',item.username)
         window.sessionStorage.setItem('username', JSON.stringify(item.username));
         setGlobalState('color',item.color)
         window.sessionStorage.setItem('color', JSON.stringify(item.color));
-        console.log("actualizado: ", item.username, item.color)
         setLoadingState('loaded')
       }
       catch (err){
@@ -78,14 +73,14 @@ const Navbar = () => {
     <>
       <Nav>
         <NavMenu>
-          <a href="/"><img src={ivoryLogo} style={{width: "50px",marginLeft:""}}alt= "Ivory Fund" /></a>
-          <NavLink to='/' activeStyle>
+          <a href="/"> <img src = {ivoryLogo} style = {{width: "50px",marginLeft:""}} alt =  "Ivory Fund" /> </a>
+          <NavLink to='/' activestyle>
             Home
           </NavLink>
-          <NavLink to='/icos' activeStyle>
+          <NavLink to='/icos' activestyle>
             ICOs
           </NavLink>
-          <NavLink to='/about' activeStyle>
+          <NavLink to='/about' activestyle>
             About
           </NavLink>
           <div className="input-group rounded">
