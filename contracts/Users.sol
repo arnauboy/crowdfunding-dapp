@@ -51,4 +51,13 @@ contract Users is ReentrancyGuard {
       User memory currentUser = addressToUser[user];
       return currentUser.favCampaigns;
   }
+
+  function isFavCampaign(address user, uint campaignId) public view returns (bool){
+        User memory currentUser = addressToUser[user];
+        uint[] memory favCampaigns = currentUser.favCampaigns;
+        for (uint i=0; i < favCampaigns.length; ++i){
+            if (favCampaigns[i] == campaignId) return true;
+        }
+        return false;
+    }
 }

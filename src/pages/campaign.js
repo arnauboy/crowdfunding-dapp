@@ -10,6 +10,8 @@ import {crowdfundingAddress} from "../config"
 import {usersAddress} from "../config"
 import {toast } from 'react-toastify';
 import {useGlobalState} from '../state'
+import star from '../images/star.png'
+import star_filled from '../images/star_complete.png'
 
 const successDonationToast = () => {
     toast.success("Succesfully donated!",{ autoClose: 5000, position: toast.POSITION.TOP_RIGHT, toastId: "123"})
@@ -29,13 +31,16 @@ const failedFav = () => {
 
 const Campaign = () => {
   const [campaign, setCampaign] = useState([])
+  const [fav, setFav] = useState(false)
   const [fundsPercentage, setFundsPercentage] = useState(0)
   const [donation, setDonation] = useState("0")
   const account = useGlobalState("accountSignedIn")[0];
   let { id } = useParams();
 
   useEffect(() => {
-    loadCampaign(id)}, [id]
+    loadCampaign(id)
+    checkFav(id)
+  }, [id,account]
   )
 
   async function donateCampaign(id, donation) {
@@ -57,7 +62,7 @@ const Campaign = () => {
     else console.log("Ethereum window undefined")
 }
 
-  async function addFavCampaign(id) {
+  async function addFavCampaign(account, id) {
     if(typeof window.ethereum !== 'undefined'){
       const provider = new ethers.providers.Web3Provider(window.ethereum); //we could use provier JsonRpcProvider()
       const signer = provider.getSigner()
@@ -66,7 +71,7 @@ const Campaign = () => {
       const transaction = await contract.addFavCampaign(account, id)
       await transaction.wait()
       successFav()
-      await loadCampaign(id)
+      await checkFav(id)
       }
       catch (err){
         console.log("Error: " , err)
@@ -75,6 +80,25 @@ const Campaign = () => {
     }
   else console.log("Ethereum window undefined")
 }
+
+  async function removeFavCampaign(account, id) {
+    if(typeof window.ethereum !== 'undefined'){
+      const provider = new ethers.providers.Web3Provider(window.ethereum); //we could use provier JsonRpcProvider()
+      const signer = provider.getSigner()
+      const contract = new ethers.Contract(usersAddress,Users.abi, signer)
+      try {
+      const transaction = await contract.addFavCampaign(account, id)
+      await transaction.wait()
+      successFav()
+      await checkFav(id)
+      }
+      catch (err){
+        console.log("Error: " , err)
+        failedFav()
+      }
+    }
+  else console.log("Ethereum window undefined")
+  }
 
   async function loadCampaign(id) {
     if(typeof window.ethereum !== 'undefined'){
@@ -106,6 +130,22 @@ const Campaign = () => {
     }
   }
 
+  async function checkFav(id) {
+    if(typeof window.ethereum !== 'undefined'){
+      const provider = new ethers.providers.Web3Provider(window.ethereum); //we could use provier JsonRpcProvider()
+      const contract = new ethers.Contract(usersAddress,Users.abi, provider)
+      try {
+        const data = await contract.isFavCampaign(account,id);
+        setFav(data);
+        console.log("data",data)
+        console.log("fav", fav)
+      }
+      catch (err){
+        console.log("Error: " , err)
+      }
+    }
+  }
+
   return (
     <div className="flex justify-center" style={{maxWidth: "40%", margin: 'auto', marginTop: "100px"}}>
       <div style = {{display: "flex"}}>
@@ -113,60 +153,29 @@ const Campaign = () => {
           <img src={`https://ipfs.io/ipfs/${campaign.ipfsHash}`} alt="Campaign" />
         </div>
         <div style={{width: "70%"}}>
-          <div style = {{fontSize: "60px", fontWeight: "bold", paddingLeft: "30px", paddingRight: "10px"}}>
-              {campaign.title}
+          <div style = {{display: "flex"}}>
+            <div style = {{fontSize: "60px", fontWeight: "bold", paddingLeft: "30px", paddingRight: "10px", float: "left"}}>
+                {campaign.title}
+            </div>
+            <div style = {{paddingTop: "40px", maxWidth: "5%"}}>
+            { !fav
+              ?
+              <button onClick = {() => addFavCampaign(account, id)}>
+                <img src = {star} alt = "Not favourite"/>
+              </button>
+              :
+              <button onClick = {() => removeFavCampaign(account, id)}>
+                <img src = {star_filled} alt = "Favourite"/>
+              </button>
+            }
+            </div>
           </div>
           <div style = {{fontSize: "30px", fontWeight: "normal", paddingLeft: "30px", paddingRight: "10px",}}>
               {campaign.description}
           </div>
         </div>
       </div>
-      <div style = {{paddingTop: "30px"}}>
-      <input type="checkbox" id="checkbox" />
-<label for="checkbox">
- <svg id="heart-svg" viewBox="467 392 58 57" xmlns="http://www.w3.org/2000/svg">
-   <g id="Group" fill="none" fill-rule="evenodd" transform="translate(467 392)">
-     <path d="M29.144 20.773c-.063-.13-4.227-8.67-11.44-2.59C7.63 28.795 28.94 43.256 29.143 43.394c.204-.138 21.513-14.6 11.44-25.213-7.214-6.08-11.377 2.46-11.44 2.59z" id="heart" fill="#AAB8C2"/>
-     <circle id="main-circ" fill="#E2264D" opacity="0" cx="29.5" cy="29.5" r="1.5"/>
 
-     <g id="grp7" opacity="0" transform="translate(7 6)">
-       <circle id="oval1" fill="#9CD8C3" cx="2" cy="6" r="2"/>
-       <circle id="oval2" fill="#8CE8C3" cx="5" cy="2" r="2"/>
-     </g>
-
-     <g id="grp6" opacity="0" transform="translate(0 28)">
-       <circle id="oval1" fill="#CC8EF5" cx="2" cy="7" r="2"/>
-       <circle id="oval2" fill="#91D2FA" cx="3" cy="2" r="2"/>
-     </g>
-
-     <g id="grp3" opacity="0" transform="translate(52 28)">
-       <circle id="oval2" fill="#9CD8C3" cx="2" cy="7" r="2"/>
-       <circle id="oval1" fill="#8CE8C3" cx="4" cy="2" r="2"/>
-     </g>
-
-     <g id="grp2" opacity="0" transform="translate(44 6)">
-       <circle id="oval2" fill="#CC8EF5" cx="5" cy="6" r="2"/>
-       <circle id="oval1" fill="#CC8EF5" cx="2" cy="2" r="2"/>
-     </g>
-
-     <g id="grp5" opacity="0" transform="translate(14 50)">
-       <circle id="oval1" fill="#91D2FA" cx="6" cy="5" r="2"/>
-       <circle id="oval2" fill="#91D2FA" cx="2" cy="2" r="2"/>
-     </g>
-
-     <g id="grp4" opacity="0" transform="translate(35 50)">
-       <circle id="oval1" fill="#F48EA7" cx="6" cy="5" r="2"/>
-       <circle id="oval2" fill="#F48EA7" cx="2" cy="2" r="2"/>
-     </g>
-
-     <g id="grp1" opacity="0" transform="translate(24)">
-       <circle id="oval1" fill="#9FC7FA" cx="2.5" cy="3" r="2"/>
-       <circle id="oval2" fill="#9FC7FA" cx="7.5" cy="2" r="2"/>
-     </g>
-   </g>
- </svg>
-</label>
-      </div>
       <div style = {{paddingTop: "30px", display: "flex"}}>
         <input
           style = {{ width: "30%", float: "left"}}
