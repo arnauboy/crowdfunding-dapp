@@ -80,10 +80,13 @@ const Navbar = () => {
           <NavLink to='/icos' activestyle>
             ICOs
           </NavLink>
+          <NavLink to='/my-campaigns' activestyle>
+            My Campaigns
+          </NavLink>
           <NavLink to='/about' activestyle>
             About
           </NavLink>
-          <div className="input-group rounded">
+          <div className="input-group rounded" style = {{width: "200px"}}>
             <input type="search" className="form-control rounded" placeholder="Search..."
              aria-label="Search" aria-describedby="search-addon" value = {searchWord} onChange = {(event) => setSearchWord(event.target.value)} onKeyDown={searchCampaigns}  />
           </div>

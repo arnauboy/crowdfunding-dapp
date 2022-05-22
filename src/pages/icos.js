@@ -47,7 +47,7 @@ const ICOs = () => {
   }
 
   return (
-    <div>
+    <div className = "main">
       <h2> Open ICOs </h2>
       <div className="flex justify-center" style={{maxWidth: "40%", margin: 'auto', maxHeight: "100px"}}>
           <div style={{maxWidth: "60%", margin: "auto", marginTop: "20px"}}>

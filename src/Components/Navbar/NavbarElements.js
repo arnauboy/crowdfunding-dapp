@@ -11,6 +11,8 @@ export const Nav = styled.nav`
   z-index: 12;
   /* Third Nav */
   /* justify-content: flex-start; */
+  position: fixed;
+  top: 0;
 `;
 
 export const NavLink = styled(Link)`

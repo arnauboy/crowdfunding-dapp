@@ -52,11 +52,11 @@ const Home = () => {
   }
 
   if (loadingState === 'loaded' && !openCampaigns.length) return(
-    <h2> No open campaigns</h2>
+    <h2 className = "main"> No open campaigns</h2>
   )
   else if(loadingState === 'loaded') {
     return (
-      <div>
+      <div className = "main">
         <h2> Open campaigns </h2>
         <div className="flex justify-center" style={{maxWidth: "50%", margin: 'auto'}}>
             <div className="grid">

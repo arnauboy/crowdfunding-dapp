@@ -88,7 +88,7 @@ class AccountSettings extends React.Component {
      });
 
     return(
-      <div>
+      <div className = "main">
         <h2 style={{  textAlign: "center", marginTop: "30px"}}> User settings</h2>
         <div style={{  textAlign: "center", margin: "auto", maxWidth: "40%" }}>
           <form onSubmit={this.configUser}>

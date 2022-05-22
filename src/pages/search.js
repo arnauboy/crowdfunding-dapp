@@ -58,7 +58,7 @@ const Search = () => {
   )
   else if(loadingState === 'loaded') {
     return (
-      <div>
+      <div className = "main">
         <h2> Results matching the word {searchWord}: {matchingCampaigns.length} </h2>
         <div className="flex justify-center" style={{maxWidth: "50%", margin: 'auto'}}>
             <div className="grid">

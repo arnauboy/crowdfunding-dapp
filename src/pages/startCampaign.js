@@ -69,7 +69,7 @@ class StartCampaign extends React.Component {
       return <Navigate to="/" />
     }
     return (
-      <div>
+      <div className = "main">
         <h2 style={{  textAlign: "center", marginTop: "30px"}}> Start Campaign</h2>
         <div style={{  textAlign: "center", margin: "auto", maxWidth: "40%" }}>
           <form onSubmit={this.createCampaign}>
