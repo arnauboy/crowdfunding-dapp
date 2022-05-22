@@ -93,7 +93,7 @@ const Home = () => {
       </div>
     );
   }
-  else return(<h2> loading... </h2>)
+  else return(<h2 className = "main"> loading... </h2>)
 };
 
 export default Home;

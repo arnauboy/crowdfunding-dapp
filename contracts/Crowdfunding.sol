@@ -153,20 +153,20 @@ contract FundMarket is ReentrancyGuard {
     return items;
   }
 
-  function fetchMyCampaigns() public view returns (FundingCampaign[] memory) {
+  function fetchMyCampaigns(address myAddress) public view returns (FundingCampaign[] memory) {
     uint itemCount = _itemIds.current();
     uint currentIndex = 0;
 
     uint itemsMine = 0;
     for (uint i =0; i<itemCount; ++i) {
-      if (idToFundingCampaign[i].campaignOwner == msg.sender) {
+      if (idToFundingCampaign[i].campaignOwner == myAddress) {
         ++itemsMine;
       }
     }
 
     FundingCampaign[] memory myItems = new FundingCampaign[](itemsMine);
     for (uint i = 0; i < itemCount; i++) {
-      if (idToFundingCampaign[i].campaignOwner == msg.sender) {
+      if (idToFundingCampaign[i].campaignOwner == myAddress) {
         uint currentItemId = i;
         FundingCampaign memory currentItem = idToFundingCampaign[currentItemId];
         myItems[currentIndex] = currentItem;

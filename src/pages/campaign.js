@@ -95,14 +95,14 @@ const Campaign = () => {
         <input
           style = {{ width: "30%", float: "left"}}
           type="number"
-          class="form-control"
+          className="form-control"
           min={0}
           max={10000000}
           step={0.01}
           value={donation}
           onChange={e => setDonation(e.target.value)}
           />
-          <button style = {{marginLeft: "20px"}}class="submitButton" onClick = {() => donateCampaign(id, donation)}>Donate MATIC</button>
+          <button style = {{marginLeft: "20px"}} className="submitButton" onClick = {() => donateCampaign(id, donation)}>Donate MATIC</button>
       </div>
       <div style = {{paddingTop: "30px", fontSize: "20px" }} >
         Funds collected: {campaign.fundsCollected} of {campaign.fundsRequested} MATIC
