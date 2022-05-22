@@ -30,8 +30,8 @@ export function getAccount() {
   let network;
   window.ethereum ?
   window.ethereum.request({method: "eth_requestAccounts"}).then((accounts) => {
-   setGlobalState('accountSignedIn',accounts)
-   window.sessionStorage.setItem('accountSignedIn', JSON.stringify(accounts));
+   setGlobalState('accountSignedIn',accounts[0])
+   window.sessionStorage.setItem('accountSignedIn', JSON.stringify(accounts[0]));
    network = window.ethereum.chainId;
    setGlobalState('currentNetwork', network)
    window.sessionStorage.setItem('currentNetwork', JSON.stringify(network));

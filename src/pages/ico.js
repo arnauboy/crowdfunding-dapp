@@ -25,7 +25,7 @@ const IvoryICO = () => {
   const [donation, setDonation] = useState("0")
   const [withdraw, setWithdraw] = useState("0")
   const account = useGlobalState("accountSignedIn")[0];
-
+  console.log(account)
   useEffect(() => {
     loadICO() }
   )
@@ -83,6 +83,7 @@ async function withdrawEther(withdraw) {
         const url = await contract.url();
         const info = await contract.info();
         const rate = await contract.rate();
+        const balance = await contract.accountBalance();
         const item = {
           name: name,
           leftSupply:  ethers.utils.formatUnits(leftSupply.toString(), 'ether'), //format as ether because my token has 10 ** 18 decimals
@@ -93,8 +94,8 @@ async function withdrawEther(withdraw) {
           url: url,
           title: title,
           owner: owner.toLowerCase(),
-          rate: rate
-
+          rate: rate,
+          balance: ethers.utils.formatUnits(balance.toString(), 'ether')
         }
         setICO(item);
         setFundsPercentage((item.leftSupply / item.totalSupply) * 100)
@@ -149,7 +150,10 @@ async function withdrawEther(withdraw) {
             value = {withdraw}
             onChange = {e => setWithdraw(e.target.value)}
             />
-            <button style = {{marginLeft: "20px"}} className = "submitButton" onClick = {() => withdrawEther(withdraw)}>Withdraw ETH</button>
+            <button style = {{marginLeft: "20px",marginRight: "20px", maxHeight: "40px"}} className = "submitButton" onClick = {() => withdrawEther(withdraw)}>Withdraw MATIC</button>
+            <div class="alert alert-primary" role="alert">
+              Available MATIC: {ico.balance}
+            </div>
             </div>
     }
 

@@ -9,7 +9,7 @@ import {useEffect, useState} from 'react'
 const MyCampaigns = () => {
   const [myCampaigns, setMyCampaigns] = useState([])
   const [loadingState, setLoadingState] = useState('not-loaded')
-  const account = useGlobalState("accountSignedIn")[0][0];
+  const account = useGlobalState("accountSignedIn")[0];
   const navigate = useNavigate()
 
   useEffect(() => {

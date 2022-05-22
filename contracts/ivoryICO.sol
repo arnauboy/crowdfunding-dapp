@@ -66,6 +66,10 @@ contract ICO is ERC20, Ownable, ReentrancyGuard {
       payable(_msgSender()).transfer(amount);
     }
 
+    function accountBalance() public view returns (uint256){
+      return address(this).balance;
+    }
+
     function leftSupply() public view returns (uint256) {
       return _supplyLeft;
     }
