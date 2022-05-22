@@ -44,20 +44,16 @@ class StartCampaign extends React.Component {
         return
       }
       this.setState({ipfsHash: result[0].hash})
-      console.log('ipfsHash', this.state.ipfsHash)
-      console.log('ipfsHash', result[0].hash)
       while(this.state.ipfsHash === '') {console.log("Setting ipfsHash")}
       if ( this.state.title  === '' || this.state.description  === '' || this.state.info  === '' ||
          this.state.url === '' || this.state.FundsRequested === 0) return
       if (typeof window.ethereum !== 'undefined') {
-        console.log("Start creating campaign")
         const provider = new ethers.providers.Web3Provider(window.ethereum);
         const signer = provider.getSigner()
         const contract = new ethers.Contract(crowdfundingAddress,FundMarket.abi, signer)
         const transaction = await contract.createCampaign(ethers.utils.parseUnits(this.state.FundsRequested,'ether'),this.state.title,
           this.state.description,this.state.info,this.state.url,this.state.ipfsHash)
         await transaction.wait()
-        console.log("Finished creating campaign")
         this.setState({redirect: true})
       }
       else console.log("Ethereum window undefined")
@@ -87,7 +83,7 @@ class StartCampaign extends React.Component {
             </div>
             <div class="form-group">
               <label> *URL   </label>
-                <input type = "text"  class="form-control" value={this.state.url} onChange = {(event) => this.setState({url: event.target.value})} />
+                <input type = "text"  pattern="^(https?:\/\/)([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?$" placeholder="https://" class="form-control" value={this.state.url} onChange = {(event) => this.setState({url: event.target.value})} title="URLs need to be proceeded by http:// or https://"/>
             </div>
             <div class="form-group">
               <label> *Funds Requested (MATIC)   </label>
