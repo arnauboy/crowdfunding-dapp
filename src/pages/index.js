@@ -21,7 +21,6 @@ const Home = () => {
       const contract = new ethers.Contract(crowdfundingAddress,FundMarket.abi, provider)
       try {
         const data = await contract.fetchCampaigns();
-
         const items = await Promise.all(data.map(async i => {
           let fundsRequested = ethers.utils.formatUnits(i.FundsRequested.toString(), 'ether')
           let fundsCollected = ethers.utils.formatUnits(i.FundsCollected.toString(), 'ether')

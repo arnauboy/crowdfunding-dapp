@@ -13,6 +13,7 @@ contract Users is ReentrancyGuard {
         string username;
         address payable userAddress;
         string color;
+        uint[] favCampaigns;
     }
 
     mapping (address => User) private addressToUser;
@@ -35,11 +36,19 @@ contract Users is ReentrancyGuard {
         addressToUser[msg.sender] = User(
             username,
             payable(msg.sender),
-            color
+            color,
+            new uint[](0)
         );
         _itemIds.increment();
     }
 
+    function addFavCampaign(address user, uint campaignId) public nonReentrant {
+      User storage currentUser = addressToUser[user];
+      currentUser.favCampaigns.push(campaignId);
+  }
 
-
+  function fetchFavCampaigns(address user) public view returns (uint[] memory){
+      User memory currentUser = addressToUser[user];
+      return currentUser.favCampaigns;
+  }
 }
