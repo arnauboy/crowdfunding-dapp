@@ -80,6 +80,9 @@ const Navbar = () => {
           <NavLink to='/icos' activestyle>
             ICOs
           </NavLink>
+          <NavLink to='/favourites' activestyle>
+            Favs
+          </NavLink>
           <NavLink to='/my-campaigns' activestyle>
             My Campaigns
           </NavLink>

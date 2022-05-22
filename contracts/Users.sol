@@ -14,6 +14,7 @@ contract Users is ReentrancyGuard {
         address payable userAddress;
         string color;
         uint[] favCampaigns;
+        bool created;
     }
 
     mapping (address => User) private addressToUser;
@@ -32,32 +33,67 @@ contract Users is ReentrancyGuard {
         return _itemIds.current();
     }
 
-    function createUser(string calldata username, string calldata color) public payable nonReentrant {
-        addressToUser[msg.sender] = User(
-            username,
+    function configUser(string calldata username, string calldata color) public payable nonReentrant {
+        User storage currentUser = addressToUser[msg.sender];
+        if(!currentUser.created) {
+            addressToUser[msg.sender] = User(
+                username,
+                payable(msg.sender),
+                color,
+                new uint[](0),
+                true
+            );
+            _itemIds.increment();
+        }
+        else {
+            currentUser.username = username;
+            currentUser.color = color;
+        }
+    }
+
+    function addFavCampaign(address user, uint campaignId) public nonReentrant{
+      User memory currentUser = addressToUser[user];
+      if(!currentUser.created) {
+           addressToUser[msg.sender] = User(
+            "",
             payable(msg.sender),
-            color,
-            new uint[](0)
+            "",
+            new uint[](0),
+            true
         );
         _itemIds.increment();
+      }
+    User storage finaluser = addressToUser[user];
+    finaluser.favCampaigns.push(campaignId);
     }
 
-    function addFavCampaign(address user, uint campaignId) public nonReentrant {
-      User storage currentUser = addressToUser[user];
-      currentUser.favCampaigns.push(campaignId);
-  }
-
-  function fetchFavCampaigns(address user) public view returns (uint[] memory){
-      User memory currentUser = addressToUser[user];
-      return currentUser.favCampaigns;
-  }
-
-  function isFavCampaign(address user, uint campaignId) public view returns (bool){
-        User memory currentUser = addressToUser[user];
-        uint[] memory favCampaigns = currentUser.favCampaigns;
-        for (uint i=0; i < favCampaigns.length; ++i){
-            if (favCampaigns[i] == campaignId) return true;
+    function removeFavCampaign(address user, uint campaignId) public nonReentrant {
+        User storage currentUser = addressToUser[user];
+        uint[] storage favCampaigns = currentUser.favCampaigns;
+        uint index = favCampaigns.length;
+        //find the index for campaignId
+        for(uint i=0; i < favCampaigns.length; ++i) {
+            if(favCampaigns[i] == campaignId) index = i;
         }
-        return false;
+        //remove item and keep array ordered
+        require(index != favCampaigns.length, "Id not found");
+        for(uint j = index; j < favCampaigns.length-1; j++){
+         favCampaigns[j] = favCampaigns[j+1];
+        }
+        favCampaigns.pop();
     }
+
+    function fetchFavCampaigns(address user) public view returns (uint[] memory){
+        User memory currentUser = addressToUser[user];
+        return currentUser.favCampaigns;
+    }
+
+    function isFavCampaign(address user, uint campaignId) public view returns (bool){
+            User memory currentUser = addressToUser[user];
+            uint[] memory favCampaigns = currentUser.favCampaigns;
+            for (uint i=0; i < favCampaigns.length; ++i){
+                if (favCampaigns[i] == campaignId) return true;
+            }
+            return false;
+        }
 }

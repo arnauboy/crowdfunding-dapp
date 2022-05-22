@@ -25,6 +25,14 @@ const successFav = () => {
     toast.success("Succesfully added to fav list!",{ autoClose: 5000, position: toast.POSITION.TOP_RIGHT, toastId: "123"})
   };
 
+const successUnfav = () => {
+    toast.success("Succesfully removed from fav list!",{ autoClose: 5000, position: toast.POSITION.TOP_RIGHT, toastId: "123"})
+  };
+
+const failedUnfav = () => {
+    toast.error("Failed removing from fav list",{ autoClose: 5000, position: toast.POSITION.TOP_RIGHT, toastId: "123"})
+  };
+
 const failedFav = () => {
     toast.error("Failed adding to fav list",{ autoClose: 5000, position: toast.POSITION.TOP_RIGHT, toastId: "123"})
   };
@@ -40,7 +48,7 @@ const Campaign = () => {
   useEffect(() => {
     loadCampaign(id)
     checkFav(id)
-  }, [id,account]
+  }
   )
 
   async function donateCampaign(id, donation) {
@@ -87,14 +95,14 @@ const Campaign = () => {
       const signer = provider.getSigner()
       const contract = new ethers.Contract(usersAddress,Users.abi, signer)
       try {
-      const transaction = await contract.addFavCampaign(account, id)
+      const transaction = await contract.removeFavCampaign(account, id)
       await transaction.wait()
-      successFav()
+      successUnfav()
       await checkFav(id)
       }
       catch (err){
         console.log("Error: " , err)
-        failedFav()
+        failedUnfav()
       }
     }
   else console.log("Ethereum window undefined")
@@ -160,11 +168,11 @@ const Campaign = () => {
             <div style = {{paddingTop: "40px", maxWidth: "5%"}}>
             { !fav
               ?
-              <button onClick = {() => addFavCampaign(account, id)}>
+              <button style = {{border: "none"}} onClick = {() => addFavCampaign(account, id)}>
                 <img src = {star} alt = "Not favourite"/>
               </button>
               :
-              <button onClick = {() => removeFavCampaign(account, id)}>
+              <button style = {{border: "none"}} onClick = {() => removeFavCampaign(account, id)}>
                 <img src = {star_filled} alt = "Favourite"/>
               </button>
             }

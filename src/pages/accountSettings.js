@@ -45,7 +45,7 @@ class AccountSettings extends React.Component {
       const provider = new ethers.providers.Web3Provider(window.ethereum);
       const signer = provider.getSigner()
       const contract = new ethers.Contract(usersAddress,Users.abi, signer)
-      const transaction = await contract.createUser(this.state.username, this.state.color)
+      const transaction = await contract.configUser(this.state.username, this.state.color)
       await transaction.wait()
       this.setState({redirect: true})
     }

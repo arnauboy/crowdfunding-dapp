@@ -12,6 +12,7 @@ import ICOs from './pages/icos'
 import Campaign from './pages/campaign'
 import IvoryICO from './pages/ico'
 import MyCampaigns from './pages/myCampaigns'
+import Favourites from './pages/favourites'
 import React from 'react';
 import {useGlobalState} from './state'
 import { ToastContainer } from 'react-toastify';
@@ -37,6 +38,7 @@ function App() {
           <Route path='/campaigns/:id' element={<Campaign />} />
           <Route path='/icos/ivoryICO' element={<IvoryICO />} />
           <Route path='/my-campaigns' element={<MyCampaigns />} />
+          <Route path='/favourites' element={<Favourites />} />
       </Routes>
     </Router>
   )
