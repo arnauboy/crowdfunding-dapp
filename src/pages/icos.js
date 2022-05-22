@@ -27,9 +27,9 @@ const ICOs = () => {
         const name = await contract.name();
         setIvoryIcoName(name.toString());
         const leftSupply = await contract.leftSupply();
-        setIvoryLeftSupply(leftSupply.toString());
+        setIvoryLeftSupply(ethers.utils.formatUnits(leftSupply.toString(), 'ether'))
         const totalSupply = await contract.totalSupply();
-        setIvoryTotalSupply(totalSupply.toString());
+        setIvoryTotalSupply(ethers.utils.formatUnits(totalSupply.toString(), 'ether'));
         const symbol = await contract.symbol();
         setIvorySymbol(symbol.toString())
 
