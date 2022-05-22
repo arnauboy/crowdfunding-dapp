@@ -23,11 +23,6 @@ const successToast = () => {
 
 export function getAccount() {
   logout()
-  window.sessionStorage.removeItem('accountSignedIn')
-  window.sessionStorage.removeItem('currentNetwork')
-  window.sessionStorage.removeItem('username')
-  window.sessionStorage.removeItem('color')
-  //let web3;
   let setEventListener=false;
   const correctNetwork = "0x539" //hardhat chainId
   //const correctNetwork = "0x89" //Polygon Testnet

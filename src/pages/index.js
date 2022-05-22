@@ -6,8 +6,6 @@ import {useGlobalState} from '../state'
 import {crowdfundingAddress} from "../config"
 import {useEffect, useState} from 'react'
 
-
-
 const Home = () => {
   const [openCampaigns, setOpenCampaigns] = useState([])
   const [loadingState, setLoadingState] = useState('not-loaded')

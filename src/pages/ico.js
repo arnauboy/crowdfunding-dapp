@@ -32,7 +32,7 @@ const IvoryICO = () => {
 
   async function donateico(donation) {
     if(typeof window.ethereum !== 'undefined'){
-      const provider = new ethers.providers.Web3Provider(window.ethereum); //we could use provier JsonRpcProvider()
+      const provider = new ethers.providers.Web3Provider(window.ethereum);
       const signer = provider.getSigner()
       const contract = new ethers.Contract(ivoryICOAddress,ICO.abi, signer)
       try {
