@@ -47,8 +47,7 @@ const Campaign = () => {
 
   useEffect(() => {
     loadCampaign(id)
-    checkFav(id)
-  }
+    }
   )
 
   async function donateCampaign(id, donation) {
@@ -131,6 +130,8 @@ const Campaign = () => {
         }
         setCampaign(item);
         setFundsPercentage((item.fundsCollected / item.fundsRequested) * 100)
+
+        await checkFav(id)
       }
       catch (err){
         console.log("Error: " , err)
@@ -145,8 +146,6 @@ const Campaign = () => {
       try {
         const data = await contract.isFavCampaign(account,id);
         setFav(data);
-        console.log("data",data)
-        console.log("fav", fav)
       }
       catch (err){
         console.log("Error: " , err)
@@ -168,11 +167,11 @@ const Campaign = () => {
             <div style = {{paddingTop: "40px", maxWidth: "5%"}}>
             { !fav
               ?
-              <button style = {{border: "none"}} onClick = {() => addFavCampaign(account, id)}>
+              <button style = {{border: "none", outline: "none"}} onClick = {() => addFavCampaign(account, id)}>
                 <img src = {star} alt = "Not favourite"/>
               </button>
               :
-              <button style = {{border: "none"}} onClick = {() => removeFavCampaign(account, id)}>
+              <button style = {{border: "none", outline: "none"}} onClick = {() => removeFavCampaign(account, id)}>
                 <img src = {star_filled} alt = "Favourite"/>
               </button>
             }

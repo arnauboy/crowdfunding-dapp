@@ -2,7 +2,7 @@ import React from 'react';
 import {setGlobalState,useGlobalState} from '../state'
 import {toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import metamaskLogo from '../images/metamask.png'
+//import metamaskLogo from '../images/metamask.png'
 import ivoryLogo from '../images/ivoryLogo.png'
 
 const successToast = () => {
@@ -81,16 +81,16 @@ function SignIn() {
       <h2 style={{color: "black"}}> Sign in and join our community!</h2>
       <div style={{margin: 'auto', maxWidth: "80%"}}>
         <div>
-          <img style={{maxWidth: "50%",float: "left", marginTop: "-100px"}} src ={ivoryLogo} alt="MetamaskLogo"/>
+          <img style={{maxWidth: "50%",float: "left", marginTop: "-100px"}} src ={ivoryLogo} alt="IvoryLogo"/>
         </div>
         <div>
           <p className = "alert alert-info" role="alert" style={{ maxWidth: "50%", float: "right"}}>
           If you have not installed the Metamask plugin yet, install it <a href="https://chrome.google.com/webstore/detail/metamask/nkbihfbeogaeaoehlefnkodbefgpgknn?hl=ca" className = "alert-link">here</a>.
            To add Polygon Network follow this <a href="https://docs.polygon.technology/docs/develop/metamask/config-polygon-on-metamask/" className = "alert-link"> documentation</a>.
           </p>
-          <div style = {{ maxWidth: "50%", float: "right"}}>
+          <div style = {{width: "100%"}}>
             <button className = "button-24"  onClick={getAccount}>
-              <img style={{maxWidth: '15%'}} src ={metamaskLogo} alt="MetamaskLogo"/> Connect Metamask Wallet
+               Connect Metamask Wallet
             </button>
           </div>
           {triedConnection

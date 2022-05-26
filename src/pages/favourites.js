@@ -15,20 +15,40 @@ const Favourites = () => {
   const navigate = useNavigate()
 
   useEffect(() => {
-    loadFavCampaigns() }
+    loadFavCampaigns(account) }, [account]
   )
 
-  async function loadFavCampaigns() {
+  async function loadFavCampaigns(account) {
     if(typeof window.ethereum !== 'undefined'){
-      const provider = new ethers.providers.Web3Provider(window.ethereum); //we could use provier JsonRpcProvider()
+      const provider = new ethers.providers.Web3Provider(window.ethereum);
       const contract = new ethers.Contract(usersAddress,Users.abi, provider)
+      const provider2 = new ethers.providers.Web3Provider(window.ethereum);
+      const contract2 = new ethers.Contract(crowdfundingAddress,FundMarket.abi, provider2)
       try {
         const data = await contract.fetchFavCampaigns(account);
-        setFavCampaigns(data);
+        const favCampaignsIDs = data;
+        let campaigns = []
+        for(const id of favCampaignsIDs) {
+            const campaignId = id.toNumber()
+            const data2 = await contract2.getCampaign(campaignId)
+            let fundsRequested = ethers.utils.formatUnits(data2.FundsRequested.toString(), 'ether')
+            let fundsCollected = ethers.utils.formatUnits(data2.FundsCollected.toString(), 'ether')
+            let item = {
+              fundsRequested,
+              fundsCollected,
+              itemId: data2.itemId.toNumber(),
+              description: data2.description,
+              title: data2.title,
+              ipfsHash: data2.ipfsHash,
+            }
+            campaigns.push(item)
+          }
+        setFavCampaigns(campaigns);
         setLoadingState('loaded')
       }
       catch (err){
         console.log("Error: " , err)
+          setFavCampaigns([]);
       }
     }
   }
@@ -38,13 +58,16 @@ const Favourites = () => {
     return (<Navigate to="/signin"/>);
   }
 
+
+  console.log("when display", favCampaigns)
+
   if (loadingState === 'loaded' && !favCampaigns.length) return(
     <h2 className = "main"> User doesn't have any favourite campaigns </h2>
   )
   else if(loadingState === 'loaded') {
     return (
       <div className = "main">
-        <h2> My own campaigns </h2>
+        <h2> Favourite campaigns </h2>
         <div className="flex justify-center" style={{maxWidth: "50%", margin: 'auto'}}>
             <div className="grid">
             {
