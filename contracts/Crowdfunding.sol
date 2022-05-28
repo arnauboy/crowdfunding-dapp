@@ -9,6 +9,7 @@ contract FundMarket is ReentrancyGuard {
   using Counters for Counters.Counter;
   Counters.Counter private _itemIds;
   Counters.Counter private _closedCampaigns;
+  Counters.Counter private _commentIds;
 
   struct FundingCampaign {
       uint itemId;
@@ -24,8 +25,17 @@ contract FundMarket is ReentrancyGuard {
       string ipfsHash;
   }
 
-  mapping(uint256 => FundingCampaign) private idToFundingCampaign;
+  //Comments and replies to comments
+  struct Comment {
+    uint commentId;
+    address commentator;
+    string message;
+    uint campaignId;
+    uint parentCommentId; //0 if not a reply to a comment
+  }
 
+  mapping(uint256 => FundingCampaign) private idToFundingCampaign;
+  mapping(uint256 => Comment) private idToComment;
 
   event CampaignStarted (
     uint indexed itemId,
@@ -174,5 +184,78 @@ contract FundMarket is ReentrancyGuard {
       }
     }
     return myItems;
+  }
+
+  //Comment have id >= 1, because we use parentCommentId = 0 for those comments which are not replies
+  function comment(address user, string calldata message, uint campaignId) public nonReentrant{
+    _commentIds.increment();
+    uint id = _commentIds.current();
+    idToComment[id] = Comment(
+      id,
+      user,
+      message,
+      campaignId,
+      0
+    );
+  }
+
+  function reply(address user, string calldata message, uint parentCommentId, uint campaignId) public nonReentrant{
+    require(parentCommentId != 0, "Wrong parent identifier");
+    _commentIds.increment();
+    uint id = _commentIds.current();
+    idToComment[id] = Comment(
+      id,
+      user,
+      message,
+      campaignId,
+      parentCommentId
+    );
+  }
+
+  //Get campaign comments. Replies excluded
+  function getComments(uint campaign) public view returns (Comment[] memory){
+    uint commentsCount = _commentIds.current();
+    uint nComments = 0;
+    for (uint i = 1; i <= commentsCount; ++i) {
+      if (idToComment[i].campaignId == campaign && idToComment[i].parentCommentId == 0) {
+        ++nComments;
+      }
+    }
+
+    Comment[] memory comments = new Comment[](nComments);
+    uint currentIndex = 0;
+    for (uint i = 1; i <= commentsCount; i++) {
+      if (idToComment[i].campaignId == campaign && idToComment[i].parentCommentId == 0) {
+        uint currentItemId = i;
+        Comment memory currentItem = idToComment[currentItemId];
+        comments[currentIndex] = currentItem;
+        currentIndex += 1;
+      }
+    }
+    return comments;
+  }
+
+  //Get comment replies
+  function getReplies(uint commentId) public view returns (Comment[] memory) {
+    require(commentId != 0, "Comment identifier cannot be zero");
+    uint commentsCount = _commentIds.current();
+    uint nReplies = 0;
+    for (uint i = 1; i<= commentsCount; ++i) {
+      if (idToComment[i].parentCommentId == commentId) {
+        ++nReplies;
+      }
+    }
+
+    Comment[] memory replies = new Comment[](nReplies);
+    uint currentIndex = 0;
+    for (uint i = 1; i <= commentsCount; i++) {
+      if (idToComment[i].parentCommentId == commentId) {
+        uint currentItemId = i;
+        Comment memory currentItem = idToComment[currentItemId];
+        replies[currentIndex] = currentItem;
+        currentIndex += 1;
+      }
+    }
+    return replies;
   }
 }
