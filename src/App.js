@@ -13,6 +13,7 @@ import Campaign from './pages/campaign'
 import IvoryICO from './pages/ico'
 import MyCampaigns from './pages/myCampaigns'
 import Favourites from './pages/favourites'
+import Thread from './pages/thread'
 import React from 'react';
 import {useGlobalState} from './state'
 import { ToastContainer } from 'react-toastify';
@@ -36,6 +37,7 @@ function App() {
           <Route path='/accountSettings' element={<AccountSettings />} />
           <Route path='/icos' element={<ICOs />} />
           <Route path='/campaigns/:id' element={<Campaign />} />
+          <Route path='/campaigns/:id/threads/:commentId' element={<Thread />} />
           <Route path='/icos/ivoryICO' element={<IvoryICO />} />
           <Route path='/my-campaigns' element={<MyCampaigns />} />
           <Route path='/favourites' element={<Favourites />} />

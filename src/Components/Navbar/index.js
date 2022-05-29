@@ -35,12 +35,12 @@ const Navbar = () => {
   const color = useGlobalState("color")[0];
   const navigate = useNavigate()
 
-  //useEffectgetUser() //Not using useEffect because it was not being updated when username and color are changed in global variables
+  getUser() //Not using useEffect because it was not being updated when username and color are changed in global variables
 
-  useEffect(() => {
+  /*useEffect(() => {
     getUser()
-  }, [username,color]
-  )
+  }, [username] // eslint-disable-line react-hooks/exhaustive-deps
+)*/
 
   //Same function as in signin.js. Hook calls can only be done from function component body
   async function getUser() {

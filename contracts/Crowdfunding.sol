@@ -258,4 +258,9 @@ contract FundMarket is ReentrancyGuard {
     }
     return replies;
   }
+
+  function getComment(uint256 id) public view returns (Comment memory) {
+        return idToComment[id];
+  }
+
 }

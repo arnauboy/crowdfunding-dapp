@@ -1,6 +1,6 @@
 import React from 'react';
 import {
-  useParams
+  useParams, useNavigate
 } from "react-router-dom";
 import {useEffect, useState} from 'react'
 import { ethers } from 'ethers'
@@ -42,10 +42,11 @@ const failedFav = () => {
   };
 
 const failedComment = () => {
-    toast.error("Failed to comment",{ autoClose: 5000, position: toast.POSITION.TOP_RIGHT, toastId: "123"})
+    toast.error("Failed to comment. User must have a username",{ autoClose: 5000, position: toast.POSITION.TOP_RIGHT, toastId: "123"})
   };
 
 const Campaign = () => {
+  const [user,setUser] = useState({}) //Used when getting users from blockchain
   const [campaign, setCampaign] = useState([])
   const [comments, setComments] = useState([])
   const [fav, setFav] = useState(false)
@@ -58,10 +59,12 @@ const Campaign = () => {
   const username = useGlobalState("username")[0];
   const color = useGlobalState("color")[0];
   let { id } = useParams();
+  const navigate = useNavigate()
+
 
   useEffect(() => {
     loadCampaign(id); loadComments(id)
-  }, [account]
+  }, [account] // eslint-disable-line react-hooks/exhaustive-deps
   )
 
   async function donateCampaign(id, donation) {
@@ -193,38 +196,68 @@ const Campaign = () => {
 
   async function addComment(id){
     if (typeof window.ethereum !== 'undefined'){
-      const provider = new ethers.providers.Web3Provider(window.ethereum);
-      const signer = provider.getSigner()
-      const contract = new ethers.Contract(crowdfundingAddress,FundMarket.abi, signer)
-      try {
-      const transaction = await contract.comment(account,commentBox,id)
-      await transaction.wait()
-      successComment()
-      await loadComments(id)
+      console.log("add comment")
+    //  await getUser(account)
+
+      if(username !== '' && commentBox !== "") {
+        const provider = new ethers.providers.Web3Provider(window.ethereum);
+        const signer = provider.getSigner()
+        const contract = new ethers.Contract(crowdfundingAddress,FundMarket.abi, signer)
+        try {
+        const transaction = await contract.comment(account,commentBox,id)
+        await transaction.wait()
+        successComment()
+        await loadComments(id)
+        }
+        catch (err){
+          console.log("Error: " , err)
+          failedComment()
+        }
       }
-      catch (err){
-        console.log("Error: " , err)
-        failedComment()
-      }
+      else failedComment()
     }
   }
 
   async function addReply(commentId){
     if (typeof window.ethereum !== 'undefined'){
-      const provider = new ethers.providers.Web3Provider(window.ethereum);
-      const signer = provider.getSigner()
-      const contract = new ethers.Contract(crowdfundingAddress,FundMarket.abi, signer)
+
+      if(username !== '') {
+        const provider = new ethers.providers.Web3Provider(window.ethereum);
+        const signer = provider.getSigner()
+        const contract = new ethers.Contract(crowdfundingAddress,FundMarket.abi, signer)
+        try {
+        console.log(commentId)
+        const transaction = await contract.reply(account,replyBox,commentId,id)
+        await transaction.wait()
+        successComment()
+        setReplyId(0)
+        setReplyBox("")
+        await loadComments(id)
+        }
+        catch (err){
+          console.log("Error: " , err)
+          failedComment()
+        }
+      }
+      else failedComment()
+    }
+  }
+
+  async function getUser(userAccount) {
+    if(typeof window.ethereum !== 'undefined'){
+      const provider = new ethers.providers.Web3Provider(window.ethereum); //we could use provier JsonRpcProvider()
+      const contract = new ethers.Contract(usersAddress,Users.abi, provider)
       try {
-      const transaction = await contract.reply(account,commentBox,commentId,id)
-      await transaction.wait()
-      successComment()
-      setReplyId(0)
-      setReplyBox("")
-      await loadComments(id)
+        const data = await contract.getUser(userAccount)
+        let item = {
+          username: data.username,
+          userAddress : data.userAddress,
+          color: data.color
+        }
+        setUser(item);
       }
       catch (err){
         console.log("Error: " , err)
-        failedComment()
       }
     }
   }
@@ -320,25 +353,29 @@ const Campaign = () => {
         <hr/>
         {
           comments.map((comment, i) => {
+            //getUser(comment.commentator)
+
             return (
-              <div className="card p-3" style = {{margin: "30px"}}>
+              <div key={i} className="card p-3" style = {{marginTop: "30px"}}>
                 <div className="d-flex justify-content-between align-items-center">
                   <div className="user d-flex flex-row align-items-center">
                     <span><small className="font-weight-bold text-primary">
                     {username !== ''
                     ?
                     <div className="tooltip" style={{ color: color}}> {username}
-                      <span className="tooltiptext"> {comment.commentator} </span>
+                      <span className="tooltiptext"> {account} </span>
                     </div>
-                    : comment.commentator
+                    : account
                     }
-                    </small> <small class="font-weight-bold">{comment.message}</small></span>
+                    </small> <small className="font-weight-bold">{comment.message}</small></span>
                   </div>
                   </div>
                   <div className="action d-flex justify-content-between mt-2 align-items-center">
                     <div className="reply">
-                      <small> <button onClick={() => setReplyId(comment.commentId)}>Reply </button></small>
+                      <small> <button style = {{textDecoration: "underline"}} onClick={() => setReplyId(comment.commentId)}>Reply </button></small>
+                      <small> <button style = {{textDecoration: "underline"}} onClick={() => {  navigate(`threads/${comment.commentId}`)}}> Thread </button></small>
                      </div>
+
                   </div>
                   {replyId === comment.commentId &&
                      <div style = {{paddingTop: "30px"}}>
@@ -348,7 +385,7 @@ const Campaign = () => {
                           onChange={e => setReplyBox(e.target.value)}
                           placeholder="Add a reply..."
                           />
-                          <button style = {{marginTop: "10px"}}type="button" className="btn btn-outline-secondary" onClick={() => addReply(comment.commentator) }>Reply</button>
+                          <button style = {{marginTop: "10px"}}type="button" className="btn btn-outline-secondary" onClick={() => addReply(comment.commentId) }>Reply</button>
                           <button style = {{marginTop: "10px"}}type="button" className="btn btn-outline-danger" onClick={() => setReplyId(0) }>Close</button>
 
                       </div>
