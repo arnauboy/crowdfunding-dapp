@@ -52,6 +52,8 @@ const Campaign = () => {
   const [fundsPercentage, setFundsPercentage] = useState(0)
   const [donation, setDonation] = useState("0")
   const [commentBox, setCommentBox] = useState("")
+  const [replyBox, setReplyBox] = useState("")
+  const [replyId, setReplyId] = useState(0) //ReplyId is the id of the comment user is replying.It is initially set to 0 because Ids start at 1
   const account = useGlobalState("accountSignedIn")[0];
   const username = useGlobalState("username")[0];
   const color = useGlobalState("color")[0];
@@ -207,6 +209,26 @@ const Campaign = () => {
     }
   }
 
+  async function addReply(commentId){
+    if (typeof window.ethereum !== 'undefined'){
+      const provider = new ethers.providers.Web3Provider(window.ethereum);
+      const signer = provider.getSigner()
+      const contract = new ethers.Contract(crowdfundingAddress,FundMarket.abi, signer)
+      try {
+      const transaction = await contract.reply(account,commentBox,commentId,id)
+      await transaction.wait()
+      successComment()
+      setReplyId(0)
+      setReplyBox("")
+      await loadComments(id)
+      }
+      catch (err){
+        console.log("Error: " , err)
+        failedComment()
+      }
+    }
+  }
+
   return (
     <div className="flex justify-center" style={{maxWidth: "50%", margin: 'auto', marginTop: "100px"}}>
       <div style = {{display: "flex"}}>
@@ -315,9 +337,22 @@ const Campaign = () => {
                   </div>
                   <div className="action d-flex justify-content-between mt-2 align-items-center">
                     <div className="reply">
-                      <small>Reply</small>
+                      <small> <button onClick={() => setReplyId(comment.commentId)}>Reply </button></small>
                      </div>
                   </div>
+                  {replyId === comment.commentId &&
+                     <div style = {{paddingTop: "30px"}}>
+                        <input
+                          className="form-control"
+                          value={replyBox}
+                          onChange={e => setReplyBox(e.target.value)}
+                          placeholder="Add a reply..."
+                          />
+                          <button style = {{marginTop: "10px"}}type="button" className="btn btn-outline-secondary" onClick={() => addReply(comment.commentator) }>Reply</button>
+                          <button style = {{marginTop: "10px"}}type="button" className="btn btn-outline-danger" onClick={() => setReplyId(0) }>Close</button>
+
+                      </div>
+                 }
                  </div>
                )
             }
