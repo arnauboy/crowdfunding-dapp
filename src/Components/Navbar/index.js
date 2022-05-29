@@ -14,7 +14,7 @@ import {
 } from '../../config'
 import Users from '../../artifacts/contracts/Users.sol/Users.json'
 import { ethers } from 'ethers'
-import {useState} from 'react'
+import {useState,useEffect} from 'react'
 
 const logout = () => {
   setGlobalState("accountSignedIn",'')
@@ -35,7 +35,12 @@ const Navbar = () => {
   const color = useGlobalState("color")[0];
   const navigate = useNavigate()
 
-  getUser() //Not using useEffect because it was not being updated when username and color are changed in global variables
+  //useEffectgetUser() //Not using useEffect because it was not being updated when username and color are changed in global variables
+
+  useEffect(() => {
+    getUser()
+  }, [username,color]
+  )
 
   //Same function as in signin.js. Hook calls can only be done from function component body
   async function getUser() {

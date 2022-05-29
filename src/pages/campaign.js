@@ -29,6 +29,10 @@ const successUnfav = () => {
     toast.success("Succesfully removed from fav list!",{ autoClose: 5000, position: toast.POSITION.TOP_RIGHT, toastId: "123"})
   };
 
+const successComment = () => {
+    toast.success("Succesfully commented!",{ autoClose: 5000, position: toast.POSITION.TOP_RIGHT, toastId: "123"})
+  };
+
 const failedUnfav = () => {
     toast.error("Failed removing from fav list",{ autoClose: 5000, position: toast.POSITION.TOP_RIGHT, toastId: "123"})
   };
@@ -37,17 +41,25 @@ const failedFav = () => {
     toast.error("Failed adding to fav list",{ autoClose: 5000, position: toast.POSITION.TOP_RIGHT, toastId: "123"})
   };
 
+const failedComment = () => {
+    toast.error("Failed to comment",{ autoClose: 5000, position: toast.POSITION.TOP_RIGHT, toastId: "123"})
+  };
+
 const Campaign = () => {
   const [campaign, setCampaign] = useState([])
+  const [comments, setComments] = useState([])
   const [fav, setFav] = useState(false)
   const [fundsPercentage, setFundsPercentage] = useState(0)
   const [donation, setDonation] = useState("0")
+  const [commentBox, setCommentBox] = useState("")
   const account = useGlobalState("accountSignedIn")[0];
+  const username = useGlobalState("username")[0];
+  const color = useGlobalState("color")[0];
   let { id } = useParams();
 
   useEffect(() => {
-    loadCampaign(id)
-    }
+    loadCampaign(id); loadComments(id)
+  }, [account]
   )
 
   async function donateCampaign(id, donation) {
@@ -141,7 +153,7 @@ const Campaign = () => {
 
   async function checkFav(id) {
     if(typeof window.ethereum !== 'undefined'){
-      const provider = new ethers.providers.Web3Provider(window.ethereum); //we could use provier JsonRpcProvider()
+      const provider = new ethers.providers.Web3Provider(window.ethereum);
       const contract = new ethers.Contract(usersAddress,Users.abi, provider)
       try {
         const data = await contract.isFavCampaign(account,id);
@@ -153,8 +165,50 @@ const Campaign = () => {
     }
   }
 
+  async function loadComments(id){
+    if (typeof window.ethereum !== 'undefined'){
+      const provider = new ethers.providers.Web3Provider(window.ethereum);
+      const contract = new ethers.Contract(crowdfundingAddress,FundMarket.abi, provider)
+      try {
+        const data = await contract.getComments(id);
+        const items = await Promise.all(data.map(async i => {
+          let item = {
+            commentId: i.commentId.toNumber(),
+            commentator : i.commentator,
+            message: i.message,
+            parentCommentId: i.parentCommentId.toNumber()
+          }
+          return item
+        }))
+        setComments(items);
+        console.log("Comments:",comments)
+      }
+      catch (err){
+        console.log("Error: " , err)
+      }
+    }
+  }
+
+  async function addComment(id){
+    if (typeof window.ethereum !== 'undefined'){
+      const provider = new ethers.providers.Web3Provider(window.ethereum);
+      const signer = provider.getSigner()
+      const contract = new ethers.Contract(crowdfundingAddress,FundMarket.abi, signer)
+      try {
+      const transaction = await contract.comment(account,commentBox,id)
+      await transaction.wait()
+      successComment()
+      await loadComments(id)
+      }
+      catch (err){
+        console.log("Error: " , err)
+        failedComment()
+      }
+    }
+  }
+
   return (
-    <div className="flex justify-center" style={{maxWidth: "40%", margin: 'auto', marginTop: "100px"}}>
+    <div className="flex justify-center" style={{maxWidth: "50%", margin: 'auto', marginTop: "100px"}}>
       <div style = {{display: "flex"}}>
         <div style={{ float: 'left', width: "20%", margin: "23px"}}>
           <img src={`https://ipfs.io/ipfs/${campaign.ipfsHash}`} alt="Campaign" />
@@ -229,6 +283,46 @@ const Campaign = () => {
         <div>
           {campaign.owner}
         </div>
+      </div>
+      <div style = {{paddingTop: "30px"}}>
+        <input
+          className="form-control"
+          value={commentBox}
+          onChange={e => setCommentBox(e.target.value)}
+          placeholder="Add a comment..."
+          />
+        <button style = {{marginTop: "10px"}}type="button" className="btn btn-outline-secondary" onClick={() => addComment(id) }>Comment</button>
+      </div>
+      <div style = {{paddingTop: "30px"}} >
+        <p style = {{fontSize: "20px"}}> User comments </p>
+        <hr/>
+        {
+          comments.map((comment, i) => {
+            return (
+              <div className="card p-3" style = {{margin: "30px"}}>
+                <div className="d-flex justify-content-between align-items-center">
+                  <div className="user d-flex flex-row align-items-center">
+                    <span><small className="font-weight-bold text-primary">
+                    {username !== ''
+                    ?
+                    <div className="tooltip" style={{ color: color}}> {username}
+                      <span className="tooltiptext"> {comment.commentator} </span>
+                    </div>
+                    : comment.commentator
+                    }
+                    </small> <small class="font-weight-bold">{comment.message}</small></span>
+                  </div>
+                  </div>
+                  <div className="action d-flex justify-content-between mt-2 align-items-center">
+                    <div className="reply">
+                      <small>Reply</small>
+                     </div>
+                  </div>
+                 </div>
+               )
+            }
+          )
+        }
       </div>
     </div>
   );
