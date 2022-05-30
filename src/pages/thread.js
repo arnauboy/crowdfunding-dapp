@@ -5,7 +5,9 @@ import {
 import {useEffect, useState} from 'react'
 import { ethers } from 'ethers'
 import FundMarket from '../artifacts/contracts/Crowdfunding.sol/FundMarket.json'
+import Users from '../artifacts/contracts/Users.sol/Users.json'
 import {crowdfundingAddress} from "../config"
+import {usersAddress} from "../config"
 import {useGlobalState} from '../state'
 import {toast } from 'react-toastify';
 
@@ -41,13 +43,15 @@ const Thread = () => {
       const contract = new ethers.Contract(crowdfundingAddress,FundMarket.abi, provider)
       try {
         const data = await contract.getComment(commentId);
+        const user = await getUser(data.commentator)
         let item = {
           commentId: data.commentId.toNumber(),
           commentator : data.commentator,
           message: data.message,
-          parentCommentId: data.parentCommentId.toNumber()
+          parentCommentId: data.parentCommentId.toNumber(),
+          username: user.username,
+          color: user.color
         }
-        console.log(item)
         setComment(item);
       }
       catch (err){
@@ -58,7 +62,6 @@ const Thread = () => {
 
   async function addReply(commentId){
     if (typeof window.ethereum !== 'undefined'){
-
       if(username !== '') {
         const provider = new ethers.providers.Web3Provider(window.ethereum);
         const signer = provider.getSigner()
@@ -80,6 +83,25 @@ const Thread = () => {
     }
   }
 
+  async function getUser(userAccount) {
+    if(typeof window.ethereum !== 'undefined'){
+      const provider = new ethers.providers.Web3Provider(window.ethereum); //we could use provier JsonRpcProvider()
+      const contract = new ethers.Contract(usersAddress,Users.abi, provider)
+      try {
+        const data = await contract.getUser(userAccount)
+        let item = {
+          username: data.username,
+          userAddress : data.userAddress,
+          color: data.color
+        }
+        return item;
+      }
+      catch (err){
+        console.log("Error: " , err)
+      }
+    }
+  }
+
 
   async function loadReplies(commentId){
     if (typeof window.ethereum !== 'undefined'){
@@ -87,13 +109,15 @@ const Thread = () => {
       const contract = new ethers.Contract(crowdfundingAddress,FundMarket.abi, provider)
       try {
         const data = await contract.getReplies(commentId);
-        console.log("data", data)
         const items = await Promise.all(data.map(async i => {
+          const user = await getUser(i.commentator)
           let item = {
             commentId: i.commentId.toNumber(),
             commentator : i.commentator,
             message: i.message,
-            parentCommentId: i.parentCommentId.toNumber()
+            parentCommentId: i.parentCommentId.toNumber(),
+            username: user.username,
+            color: user.color
           }
           return item
         }))
@@ -115,12 +139,12 @@ const Thread = () => {
           <div className="d-flex justify-content-between align-items-center">
             <div className="user d-flex flex-row align-items-center">
               <span><small className="font-weight-bold text-primary">
-              {username !== ''
+              {comment.username !== ''
               ?
-              <div className="tooltip" style={{ color: color}}> {username}
-                <span className="tooltiptext"> {account} </span>
+              <div className="tooltip" style={{ color: comment.color}}> {comment.username}
+                <span className="tooltiptext"> {comment.commentator} </span>
               </div>
-              : account
+              : comment.commentator
               }
               </small> <small className="font-weight-bold">{comment.message}</small></span>
             </div>
@@ -140,7 +164,6 @@ const Thread = () => {
                     />
                     <button style = {{marginTop: "10px"}}type="button" className="btn btn-outline-secondary" onClick={() => addReply(commentId) }>Reply</button>
                     <button style = {{marginTop: "10px"}}type="button" className="btn btn-outline-danger" onClick={() => setReplyId(0) }>Close</button>
-
                 </div>
            }
            </div>
@@ -153,12 +176,12 @@ const Thread = () => {
                 <div className="d-flex justify-content-between align-items-center">
                   <div className="user d-flex flex-row align-items-center">
                     <span><small className="font-weight-bold text-primary">
-                    {username !== ''
+                    {reply.username !== ''
                     ?
-                    <div className="tooltip" style={{ color: color}}> {username}
-                      <span className="tooltiptext"> {account} </span>
+                    <div className="tooltip" style={{ color: reply.color}}> {reply.username}
+                      <span className="tooltiptext"> {reply.commentator} </span>
                     </div>
-                    : account
+                    : reply.commentator
                     }
                     </small> <small className="font-weight-bold">{reply.message}</small></span>
                   </div>

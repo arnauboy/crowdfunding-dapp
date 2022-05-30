@@ -46,7 +46,6 @@ const failedComment = () => {
   };
 
 const Campaign = () => {
-  const [user,setUser] = useState({}) //Used when getting users from blockchain
   const [campaign, setCampaign] = useState([])
   const [comments, setComments] = useState([])
   const [fav, setFav] = useState(false)
@@ -57,7 +56,6 @@ const Campaign = () => {
   const [replyId, setReplyId] = useState(0) //ReplyId is the id of the comment user is replying.It is initially set to 0 because Ids start at 1
   const account = useGlobalState("accountSignedIn")[0];
   const username = useGlobalState("username")[0];
-  const color = useGlobalState("color")[0];
   let { id } = useParams();
   const navigate = useNavigate()
 
@@ -177,16 +175,18 @@ const Campaign = () => {
       try {
         const data = await contract.getComments(id);
         const items = await Promise.all(data.map(async i => {
+          const user = await getUser(i.commentator)
           let item = {
             commentId: i.commentId.toNumber(),
             commentator : i.commentator,
             message: i.message,
-            parentCommentId: i.parentCommentId.toNumber()
+            parentCommentId: i.parentCommentId.toNumber(),
+            username: user.username,
+            color: user.color
           }
           return item
         }))
         setComments(items);
-        console.log("Comments:",comments)
       }
       catch (err){
         console.log("Error: " , err)
@@ -254,7 +254,7 @@ const Campaign = () => {
           userAddress : data.userAddress,
           color: data.color
         }
-        setUser(item);
+        return item;
       }
       catch (err){
         console.log("Error: " , err)
@@ -360,12 +360,12 @@ const Campaign = () => {
                 <div className="d-flex justify-content-between align-items-center">
                   <div className="user d-flex flex-row align-items-center">
                     <span><small className="font-weight-bold text-primary">
-                    {username !== ''
+                    {comment.username !== ''
                     ?
-                    <div className="tooltip" style={{ color: color}}> {username}
-                      <span className="tooltiptext"> {account} </span>
+                    <div className="tooltip" style={{ color: comment.color}}> {comment.username}
+                      <span className="tooltiptext"> {comment.commentator} </span>
                     </div>
-                    : account
+                    : comment.commentator
                     }
                     </small> <small className="font-weight-bold">{comment.message}</small></span>
                   </div>
