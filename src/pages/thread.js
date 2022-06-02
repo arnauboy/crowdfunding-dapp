@@ -6,8 +6,8 @@ import {useEffect, useState} from 'react'
 import { ethers } from 'ethers'
 import FundMarket from '../artifacts/contracts/fundMarket.sol/FundMarket.json'
 import Users from '../artifacts/contracts/Users.sol/Users.json'
-import {fundMarketAddress} from "../config"
-import {usersAddress} from "../config"
+import {fundMarketAddress} from "../utils/addresses.js"
+import {usersAddress} from "../utils/addresses"
 import {useGlobalState} from '../state'
 import {toast } from 'react-toastify';
 
@@ -26,7 +26,7 @@ const Thread = () => {
   const [comment, setComment] = useState([])
   const account = useGlobalState("accountSignedIn")[0];
   const username = useGlobalState("username")[0];
-  const color = useGlobalState("color")[0];
+
   const navigate = useNavigate()
   const [replyBox, setReplyBox] = useState("")
   const [replyId, setReplyId] = useState(0) //ReplyId is the id of the comment user is replying.It is initially set to 0 because Ids start at 1
@@ -40,7 +40,7 @@ const Thread = () => {
   async function loadComment(commentId) {
     if(typeof window.ethereum !== 'undefined'){
       const provider = new ethers.providers.Web3Provider(window.ethereum); //we could use provier JsonRpcProvider()
-      const contract = new ethers.Contract(crowdfundingAddress,FundMarket.abi, provider)
+      const contract = new ethers.Contract(fundMarketAddress,FundMarket.abi, provider)
       try {
         const data = await contract.getComment(commentId);
         const user = await getUser(data.commentator)
@@ -65,7 +65,7 @@ const Thread = () => {
       if(username !== '') {
         const provider = new ethers.providers.Web3Provider(window.ethereum);
         const signer = provider.getSigner()
-        const contract = new ethers.Contract(crowdfundingAddress,FundMarket.abi, signer)
+        const contract = new ethers.Contract(fundMarketAddress,FundMarket.abi, signer)
         try {
         const transaction = await contract.reply(account,replyBox,commentId,id)
         await transaction.wait()
@@ -106,7 +106,7 @@ const Thread = () => {
   async function loadReplies(commentId){
     if (typeof window.ethereum !== 'undefined'){
       const provider = new ethers.providers.Web3Provider(window.ethereum);
-      const contract = new ethers.Contract(crowdfundingAddress,FundMarket.abi, provider)
+      const contract = new ethers.Contract(fundMarketAddress,FundMarket.abi, provider)
       try {
         const data = await contract.getReplies(commentId);
         const items = await Promise.all(data.map(async i => {

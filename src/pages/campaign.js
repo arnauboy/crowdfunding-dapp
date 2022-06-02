@@ -6,8 +6,8 @@ import {useEffect, useState} from 'react'
 import { ethers } from 'ethers'
 import FundMarket from '../artifacts/contracts/fundMarket.sol/FundMarket.json'
 import Users from '../artifacts/contracts/Users.sol/Users.json'
-import {fundMarketAddress} from "../config"
-import {usersAddress} from "../config"
+import {fundMarketAddress} from "../utils/addresses"
+import {usersAddress} from "../utils/addresses"
 import {toast } from 'react-toastify';
 import {useGlobalState} from '../state'
 import star from '../images/star.png'
@@ -69,7 +69,7 @@ const Campaign = () => {
     if(typeof window.ethereum !== 'undefined'){
       const provider = new ethers.providers.Web3Provider(window.ethereum); //we could use provier JsonRpcProvider()
       const signer = provider.getSigner()
-      const contract = new ethers.Contract(crowdfundingAddress,FundMarket.abi, signer)
+      const contract = new ethers.Contract(fundMarketAddress,FundMarket.abi, signer)
       try {
       const transaction = await contract.donateCampaign(id, {value: ethers.utils.parseUnits(donation,'ether')})
       await transaction.wait()
@@ -125,7 +125,7 @@ const Campaign = () => {
   async function loadCampaign(id) {
     if(typeof window.ethereum !== 'undefined'){
       const provider = new ethers.providers.Web3Provider(window.ethereum); //we could use provier JsonRpcProvider()
-      const contract = new ethers.Contract(crowdfundingAddress,FundMarket.abi, provider)
+      const contract = new ethers.Contract(fundMarketAddress,FundMarket.abi, provider)
       try {
         const data = await contract.getCampaign(id);
         let fundsRequested = ethers.utils.formatUnits(data.FundsRequested.toString(), 'ether')
@@ -171,7 +171,7 @@ const Campaign = () => {
   async function loadComments(id){
     if (typeof window.ethereum !== 'undefined'){
       const provider = new ethers.providers.Web3Provider(window.ethereum);
-      const contract = new ethers.Contract(crowdfundingAddress,FundMarket.abi, provider)
+      const contract = new ethers.Contract(fundMarketAddress,FundMarket.abi, provider)
       try {
         const data = await contract.getComments(id);
         const items = await Promise.all(data.map(async i => {
@@ -202,7 +202,7 @@ const Campaign = () => {
       if(username !== '' && commentBox !== "") {
         const provider = new ethers.providers.Web3Provider(window.ethereum);
         const signer = provider.getSigner()
-        const contract = new ethers.Contract(crowdfundingAddress,FundMarket.abi, signer)
+        const contract = new ethers.Contract(fundMarketAddress,FundMarket.abi, signer)
         try {
         const transaction = await contract.comment(account,commentBox,id)
         await transaction.wait()
@@ -224,7 +224,7 @@ const Campaign = () => {
       if(username !== '') {
         const provider = new ethers.providers.Web3Provider(window.ethereum);
         const signer = provider.getSigner()
-        const contract = new ethers.Contract(crowdfundingAddress,FundMarket.abi, signer)
+        const contract = new ethers.Contract(fundMarketAddress,FundMarket.abi, signer)
         try {
         console.log(commentId)
         const transaction = await contract.reply(account,replyBox,commentId,id)

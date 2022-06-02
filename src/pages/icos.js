@@ -1,6 +1,6 @@
 import React from 'react';
 import ivoryCoinLogo from '../images/ivoyCoin.png'
-import {ivoryICOAddress} from "../config"
+import {ivoryICOAddress} from "../utils/addresses"
 import IvoryICO from '../artifacts/contracts/ivoryICO.sol/ICO.json'
 import {useEffect, useState} from 'react'
 import { ethers } from 'ethers'

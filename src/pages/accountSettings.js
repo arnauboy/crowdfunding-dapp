@@ -1,6 +1,6 @@
 import {
   usersAddress
-} from '../config'
+} from '../utils/addresses'
 import React from  'react'
 import { ethers } from 'ethers'
 import Users from '../artifacts/contracts/Users.sol/Users.json'

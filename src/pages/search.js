@@ -3,7 +3,7 @@ import {
   useParams, useNavigate
 } from "react-router-dom";
 import FundMarket from '../artifacts/contracts/fundMarket.sol/FundMarket.json'
-import {fundMarketAddress} from "../config"
+import {fundMarketAddress} from "../utils/addresses"
 import { ethers } from 'ethers'
 import {useEffect, useState} from 'react'
 
@@ -19,7 +19,7 @@ const Search = () => {
   async function searchCampaignsByWord(searchWord) {
     if(typeof window.ethereum !== 'undefined'){
       const provider = new ethers.providers.Web3Provider(window.ethereum); //we could use provier JsonRpcProvider()
-      const contract = new ethers.Contract(crowdfundingAddress,FundMarket.abi, provider)
+      const contract = new ethers.Contract(fundMarketAddress,FundMarket.abi, provider)
       try {
           const data = await contract.fetchCampaignsByWord(searchWord);
           const items = await Promise.all(data.map(async i => {

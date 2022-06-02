@@ -4,8 +4,8 @@ import { ethers } from 'ethers'
 import FundMarket from '../artifacts/contracts/fundMarket.sol/FundMarket.json'
 import Users from '../artifacts/contracts/Users.sol/Users.json'
 import {useGlobalState} from '../state'
-import {fundMarketAddress} from "../config"
-import {usersAddress} from "../config"
+import {fundMarketAddress} from "../utils/addresses"
+import {usersAddress} from "../utils/addresses"
 import {useEffect, useState} from 'react'
 
 const Favourites = () => {
@@ -23,7 +23,7 @@ const Favourites = () => {
       const provider = new ethers.providers.Web3Provider(window.ethereum);
       const contract = new ethers.Contract(usersAddress,Users.abi, provider)
       const provider2 = new ethers.providers.Web3Provider(window.ethereum);
-      const contract2 = new ethers.Contract(crowdfundingAddress,FundMarket.abi, provider2)
+      const contract2 = new ethers.Contract(fundMarketAddress,FundMarket.abi, provider2)
       try {
         const data = await contract.fetchFavCampaigns(account);
         const favCampaignsIDs = data;

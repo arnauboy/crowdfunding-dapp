@@ -2,7 +2,7 @@ import React from 'react';
 import { ethers } from 'ethers'
 import {toast } from 'react-toastify';
 import {useEffect, useState} from 'react'
-import {ivoryICOAddress} from "../config"
+import {ivoryICOAddress} from "../utils/addresses"
 import ICO from '../artifacts/contracts/ivoryICO.sol/ICO.json'
 import ivoryCoinLogo from '../images/ivoyCoin.png'
 import {useGlobalState} from '../state'

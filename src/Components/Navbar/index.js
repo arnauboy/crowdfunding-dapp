@@ -11,10 +11,10 @@ import userSettings from '../../images/user_settings.jpg'
 import { useNavigate } from 'react-router-dom'
 import {
   usersAddress
-} from '../../config'
+} from '../../utils/addresses'
 import Users from '../../artifacts/contracts/Users.sol/Users.json'
 import { ethers } from 'ethers'
-import {useState,useEffect} from 'react'
+import {useState} from 'react'
 
 const logout = () => {
   setGlobalState("accountSignedIn",'')

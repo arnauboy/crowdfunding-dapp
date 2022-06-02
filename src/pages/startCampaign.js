@@ -3,8 +3,7 @@ import React from  'react'
 import { ethers } from 'ethers'
 import FundMarket from '../artifacts/contracts/fundMarket.sol/FundMarket.json'
 import { Navigate } from 'react-router'
-import {fundMarketAddress} from '../config'
-
+import {fundMarketAddress} from "../utils/addresses"
 class StartCampaign extends React.Component {
   constructor(props) {
     super(props)
@@ -47,7 +46,7 @@ class StartCampaign extends React.Component {
       if (typeof window.ethereum !== 'undefined') {
         const provider = new ethers.providers.Web3Provider(window.ethereum);
         const signer = provider.getSigner()
-        const contract = new ethers.Contract(crowdfundingAddress,FundMarket.abi, signer)
+        const contract = new ethers.Contract(fundMarketAddress,FundMarket.abi, signer)
         const transaction = await contract.createCampaign(ethers.utils.parseUnits(this.state.FundsRequested,'ether'),this.state.title,
           this.state.description,this.state.info,this.state.url,this.state.ipfsHash)
         await transaction.wait()
