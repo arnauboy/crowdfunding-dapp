@@ -1,9 +1,9 @@
 import React from 'react';
 import {Navigate, useNavigate} from 'react-router-dom'
 import { ethers } from 'ethers'
-import FundMarket from '../artifacts/contracts/Crowdfunding.sol/FundMarket.json'
+import FundMarket from '../artifacts/contracts/fundMarket.sol/FundMarket.json'
 import {useGlobalState} from '../state'
-import {crowdfundingAddress} from "../config"
+import {fundMarketAddress} from "../config"
 import {useEffect, useState} from 'react'
 
 const MyCampaigns = () => {

@@ -1,7 +1,7 @@
 const { expect } = require("chai");
 const { ethers } = require("hardhat");
 
-describe("Crowdfunding", function () {
+describe("FundMarket", function () {
   it("Should create campaigns, execute donations and fetch campaigns", async function () {
     const FundMarket = await ethers.getContractFactory("FundMarket");
     const fundMarket = await FundMarket.deploy();

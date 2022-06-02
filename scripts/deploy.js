@@ -1,10 +1,10 @@
 const hre = require("hardhat");
 
 async function main() {
-  const Crowdfunding = await hre.ethers.getContractFactory("FundMarket");
-  const crowdfunding = await Crowdfunding.deploy();
-  await crowdfunding.deployed();
-  console.log("Crowdfunding deployed to:", crowdfunding.address);
+  const FundMarket = await hre.ethers.getContractFactory("FundMarket");
+  const fundMarket = await FundMarket.deploy();
+  await fundMarket.deployed();
+  console.log("FundMarket deployed to:", fundMarket.address);
 
   const IvoryICO = await hre.ethers.getContractFactory("ICO");
   const ivoryICO = await IvoryICO.deploy("0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266",10000,100);

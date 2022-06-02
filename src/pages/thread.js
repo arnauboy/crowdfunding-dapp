@@ -4,9 +4,9 @@ import {
 } from "react-router-dom";
 import {useEffect, useState} from 'react'
 import { ethers } from 'ethers'
-import FundMarket from '../artifacts/contracts/Crowdfunding.sol/FundMarket.json'
+import FundMarket from '../artifacts/contracts/fundMarket.sol/FundMarket.json'
 import Users from '../artifacts/contracts/Users.sol/Users.json'
-import {crowdfundingAddress} from "../config"
+import {fundMarketAddress} from "../config"
 import {usersAddress} from "../config"
 import {useGlobalState} from '../state'
 import {toast } from 'react-toastify';

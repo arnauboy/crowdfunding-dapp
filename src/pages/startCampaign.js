@@ -1,12 +1,9 @@
 import ipfs from '../ipfs'
 import React from  'react'
 import { ethers } from 'ethers'
-import FundMarket from '../artifacts/contracts/Crowdfunding.sol/FundMarket.json'
+import FundMarket from '../artifacts/contracts/fundMarket.sol/FundMarket.json'
 import { Navigate } from 'react-router'
-
-import {
-  crowdfundingAddress
-} from '../config'
+import {fundMarketAddress} from '../config'
 
 class StartCampaign extends React.Component {
   constructor(props) {

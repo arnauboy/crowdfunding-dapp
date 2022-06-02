@@ -2,7 +2,6 @@ import React from 'react';
 import {setGlobalState,useGlobalState} from '../state'
 import {toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-//import metamaskLogo from '../images/metamask.png'
 import ivoryLogo from '../images/ivoryLogo.png'
 
 const successToast = () => {

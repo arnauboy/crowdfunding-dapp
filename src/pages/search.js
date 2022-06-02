@@ -2,8 +2,8 @@ import React from 'react';
 import {
   useParams, useNavigate
 } from "react-router-dom";
-import FundMarket from '../artifacts/contracts/Crowdfunding.sol/FundMarket.json'
-import {crowdfundingAddress} from "../config"
+import FundMarket from '../artifacts/contracts/fundMarket.sol/FundMarket.json'
+import {fundMarketAddress} from "../config"
 import { ethers } from 'ethers'
 import {useEffect, useState} from 'react'
 
