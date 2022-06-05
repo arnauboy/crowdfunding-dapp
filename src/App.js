@@ -1,6 +1,7 @@
 import './App.css';
 import Navbar from './Components/Navbar';
 import LeftComponent from "./Components/LeftComponent"
+import NotificationBox from "./Components/notificationBox"
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Home from './pages/index';
 import About from './pages/about';
@@ -29,6 +30,7 @@ function App() {
       <ToastContainer />
       <Navbar />
       <LeftComponent />
+      <NotificationBox />
       <Routes>
         <Route path='/' element={<Home />} />
           <Route path='/about' element={<About />} />
