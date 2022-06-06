@@ -52,4 +52,22 @@ describe("User", function() {
       let fav = await users.isFavCampaign(userAddress.address, 0)
       expect(fav).to.equal(false)
     });
+    it("Should create a notification for replying", async function () {
+      const [_,userAddress] = await ethers.getSigners();
+      await users.notifyCommentReplies(userAddress.address,0,1)
+      let notis = await users.fetchUserNotifications(userAddress.address)
+      expect(notis.length).to.equal(1)
+    })
+    it("Should create a notification for reaching funding goal", async function () {
+      const [_,userAddress] = await ethers.getSigners();
+      await users.notifyFundsReached(userAddress.address,0)
+      let notis = await users.fetchUserNotifications(userAddress.address)
+      expect(notis.length).to.equal(1)
+    })
+    it("Should create a notification for commenting", async function () {
+      const [_,userAddress] = await ethers.getSigners();
+      await users.notifyCommentInYourCampaign(userAddress.address,0)
+      let notis = await users.fetchUserNotifications(userAddress.address)
+      expect(notis.length).to.equal(1)
+    })
 });
