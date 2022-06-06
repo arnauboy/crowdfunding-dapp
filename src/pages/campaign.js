@@ -65,14 +65,19 @@ const Campaign = () => {
   }, [account] // eslint-disable-line react-hooks/exhaustive-deps
   )
 
-  async function donateCampaign(id, donation) {
+  async function donateCampaign(id, donation,campaignOwner,fundsRequested,fundsCollected) {
     if(typeof window.ethereum !== 'undefined'){
       const provider = new ethers.providers.Web3Provider(window.ethereum); //we could use provier JsonRpcProvider()
       const signer = provider.getSigner()
       const contract = new ethers.Contract(fundMarketAddress,FundMarket.abi, signer)
+      const user_contract = new ethers.Contract(usersAddress,Users.abi, signer)
       try {
       const transaction = await contract.donateCampaign(id, {value: ethers.utils.parseUnits(donation,'ether')})
       await transaction.wait()
+      if(donation + fundsCollected >= fundsRequested) {
+        const notify_transaction = await user_contract.notifyFundsReached(campaignOwner, id)
+        await notify_transaction.wait()
+      }
       successDonationToast()
       await loadCampaign(id)
       }
@@ -144,8 +149,8 @@ const Campaign = () => {
           fundsReached: data.fundsReached
         }
         setCampaign(item);
-        setFundsPercentage((item.fundsCollected / item.fundsRequested) * 100)
-
+        let percentage = (item.fundsCollected / item.fundsRequested) * 100
+        setFundsPercentage(percentage)
         await checkFav(id)
       }
       catch (err){
@@ -194,7 +199,7 @@ const Campaign = () => {
     }
   }
 
-  async function addComment(id){
+  async function addComment(id, campaignOwner){
     if (typeof window.ethereum !== 'undefined'){
       console.log("add comment")
     //  await getUser(account)
@@ -203,9 +208,12 @@ const Campaign = () => {
         const provider = new ethers.providers.Web3Provider(window.ethereum);
         const signer = provider.getSigner()
         const contract = new ethers.Contract(fundMarketAddress,FundMarket.abi, signer)
+        const user_contract = new ethers.Contract(usersAddress,Users.abi, signer)
         try {
         const transaction = await contract.comment(account,commentBox,id)
         await transaction.wait()
+        const notify_transaction = await user_contract.notifyCommentInYourCampaign(campaignOwner, id)
+        await notify_transaction.wait()
         successComment()
         await loadComments(id)
         }
@@ -218,17 +226,19 @@ const Campaign = () => {
     }
   }
 
-  async function addReply(commentId){
+  async function addReply(commentId, commentOwner){
     if (typeof window.ethereum !== 'undefined'){
 
       if(username !== '') {
         const provider = new ethers.providers.Web3Provider(window.ethereum);
         const signer = provider.getSigner()
         const contract = new ethers.Contract(fundMarketAddress,FundMarket.abi, signer)
+        const user_contract = new ethers.Contract(usersAddress,Users.abi, signer)
         try {
-        console.log(commentId)
         const transaction = await contract.reply(account,replyBox,commentId,id)
         await transaction.wait()
+        const notify_transaction = await user_contract.notifyCommentReplies(commentOwner, id, commentId)
+        await notify_transaction.wait()
         successComment()
         setReplyId(0)
         setReplyBox("")
@@ -251,7 +261,7 @@ const Campaign = () => {
         const data = await contract.getUser(userAccount)
         let item = {
           username: data.username,
-          userAddress : data.userAddress,
+          usersAddress : data.usersAddress,
           color: data.color
         }
         return item;
@@ -263,7 +273,7 @@ const Campaign = () => {
   }
 
   return (
-    <div className="flex justify-center" style={{maxWidth: "50%", margin: 'auto', marginTop: "100px"}}>
+    <div className="flex justify-center" style={{maxWidth: "50%", margin: 'auto', marginTop: "150px"}}>
       <div style = {{display: "flex"}}>
         <div style={{ float: 'left', width: "20%", margin: "23px"}}>
           <img src={`https://ipfs.io/ipfs/${campaign.ipfsHash}`} alt="Campaign" />
@@ -303,7 +313,7 @@ const Campaign = () => {
           value={donation}
           onChange={e => setDonation(e.target.value)}
           />
-          <button style = {{marginLeft: "20px"}} className="submitButton" onClick = {() => donateCampaign(id, donation)}>Donate MATIC</button>
+          <button style = {{marginLeft: "20px"}} className="submitButton" onClick = {() => donateCampaign(id, donation,campaign.owner,campaign.fundsRequested,campaign.fundsCollected)}>Donate MATIC</button>
       </div>
       <div style = {{paddingTop: "30px", fontSize: "20px" }} >
         Funds collected: {campaign.fundsCollected} of {campaign.fundsRequested} MATIC
@@ -346,7 +356,7 @@ const Campaign = () => {
           onChange={e => setCommentBox(e.target.value)}
           placeholder="Add a comment..."
           />
-        <button style = {{marginTop: "10px"}}type="button" className="btn btn-outline-secondary" onClick={() => addComment(id) }>Comment</button>
+        <button style = {{marginTop: "10px"}}type="button" className="btn btn-outline-secondary" onClick={() => addComment(id, campaign.owner) }>Comment</button>
       </div>
       <div style = {{paddingTop: "30px"}} >
         <p style = {{fontSize: "20px"}}> User comments </p>
@@ -385,7 +395,7 @@ const Campaign = () => {
                           onChange={e => setReplyBox(e.target.value)}
                           placeholder="Add a reply..."
                           />
-                          <button style = {{marginTop: "10px"}}type="button" className="btn btn-outline-secondary" onClick={() => addReply(comment.commentId) }>Reply</button>
+                          <button style = {{marginTop: "10px"}}type="button" className="btn btn-outline-secondary" onClick={() => addReply(comment.commentId, comment.commentator) }>Reply</button>
                           <button style = {{marginTop: "10px"}}type="button" className="btn btn-outline-danger" onClick={() => setReplyId(0) }>Close</button>
 
                       </div>

@@ -107,7 +107,7 @@ async function withdrawEther(withdraw) {
   }
 
   return(
-    <div className="flex justify-center" style={{maxWidth: "50%", margin: 'auto', marginTop: "100px"}}>
+    <div className="flex justify-center" style={{maxWidth: "50%", margin: 'auto', marginTop: "150px"}}>
       <div style = {{display: "flex"}}>
         <div style={{ float: 'left', width: "20%", margin: "23px"}}>
           <img src={ivoryCoinLogo} alt="ico" />

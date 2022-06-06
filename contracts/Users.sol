@@ -9,7 +9,7 @@ contract Users is ReentrancyGuard {
     using Counters for Counters.Counter;
     Counters.Counter private _itemIds;
     Counters.Counter private _notifsIds;
-    enum notiType{ REPLY, FUNDS_REACHED, FAV_CAMPAIGN_FUNDS_REACHED } //REPLY = 0, FUNDS_REACHED = 1, FAV_CAMPAIGN_FUNDS_REACHED = 2
+    enum notiType{ REPLY, FUNDS_REACHED, COMMENT} //REPLY = 0, FUNDS_REACHED = 1, COMMENT = 2
 
     struct User {
         string username;
@@ -21,7 +21,7 @@ contract Users is ReentrancyGuard {
 
     struct Notification {
         uint id;
-        notiType notification_type; //"comment", "fundsReached" or "favCampaignClosed"
+        notiType notification_type; //"comment", "fundsReached" or "reply"
         uint campaignId;
         uint commentId;
         address user;
@@ -157,7 +157,7 @@ contract Users is ReentrancyGuard {
         _notifsIds.increment();
     }
 
-    function notifyFavCampaignFundsReached(address user,uint campaignId) public nonReentrant {
+    function notifyCommentInYourCampaign(address user,uint campaignId) public nonReentrant {
         User memory currentUser = addressToUser[user];
         if(!currentUser.created) {
             addressToUser[msg.sender] = User(
@@ -173,7 +173,7 @@ contract Users is ReentrancyGuard {
         uint256 notiId = _notifsIds.current();
         idToNotification[notiId] = Notification(
             notiId,
-            notiType.FAV_CAMPAIGN_FUNDS_REACHED,
+            notiType.COMMENT,
             campaignId,
             0,
             user

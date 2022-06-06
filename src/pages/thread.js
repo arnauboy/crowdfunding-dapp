@@ -131,7 +131,7 @@ const Thread = () => {
   }
 
   return (
-    <div className="flex justify-center" style={{maxWidth: "50%", margin: 'auto', marginTop: "100px"}}>
+    <div className="flex justify-center" style={{maxWidth: "40%", margin: 'auto', marginTop: "150px"}}>
       <div style = {{paddingTop: "30px"}} >
         <p style = {{fontSize: "20px"}}> Answers </p>
         <hr/>

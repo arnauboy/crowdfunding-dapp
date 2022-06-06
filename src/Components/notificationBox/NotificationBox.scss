@@ -1,21 +1,24 @@
 
 .notifications_container {
-  background-color: rgba(255,255,255, 0.75);
+  background-color: #D9EDDF;
   margin: 0 auto;
   width: 100%;
   padding: 1rem;
-  border-radius: .25rem;
+  border-radius: 0.25rem;
   border: .125rem;
 }
 
-.alert {
-    border-radius: .125rem;
-    // border: 1px solid black;
-    padding: .5rem;
-    color: black;
-    margin-bottom: 1rem;
-
-    &__primary {
-      background-color: #ccf2ff;
+.alert_notification{
+      padding: .5rem;
+      color: black;
+      margin-bottom: 1rem;
+      border-radius: 4rem;
+      background-color: #FFFFFF;
+      border-color: #1CA65A;
+      width: 100%;
     }
-  }
+
+.notification_icon {
+  width: 10%;
+  float: left;
+}
