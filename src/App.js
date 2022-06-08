@@ -22,7 +22,7 @@ import { ToastContainer } from 'react-toastify';
 
 function App() {
   let network = useGlobalState('currentNetwork')[0]
-  if(network !== "0x539" ) {
+  if(network !== "0x13881" ) {
     return (<SignIn/>);
   }
   return (

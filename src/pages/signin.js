@@ -3,6 +3,7 @@ import {setGlobalState,useGlobalState} from '../state'
 import {toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import ivoryLogo from '../images/ivoryLogo.png'
+import {blockchain} from '../utils/addresses'
 
 const successToast = () => {
     toast.success("Succesfully signed in!",{ autoClose: 5000, position: toast.POSITION.TOP_RIGHT, toastId: "123"})
@@ -23,9 +24,9 @@ const successToast = () => {
 export function getAccount() {
   logout()
   let setEventListener=false;
-  const correctNetwork = "0x539" //hardhat chainId
+  //const correctNetwork = "0x539" //hardhat chainId
   //const correctNetwork = "0x89" //Polygon Testnet
-  //const correctNetwork = "0x13881" //Mumbai Tesnet
+  const correctNetwork = blockchain //Mumbai Tesnet
   let network;
   window.ethereum ?
   window.ethereum.request({method: "eth_requestAccounts"}).then((accounts) => {
@@ -38,7 +39,7 @@ export function getAccount() {
    // Check if network is correct
    network === correctNetwork ?
       //getUser()
-      console.log("You are on the correct network")
+      console.log("You are on the correct network: ", network)
        :
      console.log("You're on the wrong network: ", network)
 
@@ -61,7 +62,7 @@ function SignIn() {
   let correctNetwork=false;
   let triedConnection = false;
   let network = useGlobalState('currentNetwork')[0]
-  if(network === "0x539" ) {
+  if(network === blockchain ) {
     correctNetwork = true;
     successToast();
   }

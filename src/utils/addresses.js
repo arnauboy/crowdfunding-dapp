@@ -1,3 +1,4 @@
-export const fundMarketAddress = "0x5FbDB2315678afecb367f032d93F642f64180aa3";
-export const ivoryICOAddress = "0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512"
-export const usersAddress = "0x9fE46736679d2D9a65F0992F2272dE9f3c7fa6e0"
+export const fundMarketAddress = "0x44df2bF890931e7c6ddFf203CD9A0e5A7004a067";
+export const ivoryICOAddress = "0xE7143Dbb7E5B10040024d2fDF228476B955C07A3"
+export const usersAddress = "0xf9aB4f59a26d68C064404E9A0676AD828bfdC49C"
+export const blockchain = "0x13881" //Mumbai testnet

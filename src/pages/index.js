@@ -5,6 +5,7 @@ import FundMarket from '../artifacts/contracts/fundMarket.sol/FundMarket.json'
 import {useGlobalState} from '../state'
 import {fundMarketAddress} from "../utils/addresses"
 import {useEffect, useState} from 'react'
+import {blockchain} from '../utils/addresses'
 
 const Home = () => {
   const [openCampaigns, setOpenCampaigns] = useState([])
@@ -46,7 +47,7 @@ const Home = () => {
   }
 
   let network = useGlobalState('currentNetwork')[0]
-  if(network !== "0x539" ) {
+  if(network !== blockchain ) {
     return (<Navigate to="/signin"/>);
   }
 
