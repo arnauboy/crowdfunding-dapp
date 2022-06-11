@@ -24,9 +24,7 @@ const successToast = () => {
 export function getAccount() {
   logout()
   let setEventListener=false;
-  //const correctNetwork = "0x539" //hardhat chainId
-  //const correctNetwork = "0x89" //Polygon Testnet
-  const correctNetwork = blockchain //Mumbai Tesnet
+  const correctNetwork = blockchain 
   let network;
   window.ethereum ?
   window.ethereum.request({method: "eth_requestAccounts"}).then((accounts) => {

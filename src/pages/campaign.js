@@ -70,14 +70,9 @@ const Campaign = () => {
       const provider = new ethers.providers.Web3Provider(window.ethereum); //we could use provier JsonRpcProvider()
       const signer = provider.getSigner()
       const contract = new ethers.Contract(fundMarketAddress,FundMarket.abi, signer)
-      const user_contract = new ethers.Contract(usersAddress,Users.abi, signer)
       try {
       const transaction = await contract.donateCampaign(id, {value: ethers.utils.parseUnits(donation,'ether')})
       await transaction.wait()
-      if(donation + fundsCollected >= fundsRequested) {
-        const notify_transaction = await user_contract.notifyFundsReached(campaignOwner, id)
-        await notify_transaction.wait()
-      }
       successDonationToast()
       await loadCampaign(id)
       }
@@ -208,12 +203,9 @@ const Campaign = () => {
         const provider = new ethers.providers.Web3Provider(window.ethereum);
         const signer = provider.getSigner()
         const contract = new ethers.Contract(fundMarketAddress,FundMarket.abi, signer)
-        const user_contract = new ethers.Contract(usersAddress,Users.abi, signer)
         try {
         const transaction = await contract.comment(account,commentBox,id)
         await transaction.wait()
-        const notify_transaction = await user_contract.notifyCommentInYourCampaign(campaignOwner, id)
-        await notify_transaction.wait()
         successComment()
         await loadComments(id)
         }
@@ -233,12 +225,9 @@ const Campaign = () => {
         const provider = new ethers.providers.Web3Provider(window.ethereum);
         const signer = provider.getSigner()
         const contract = new ethers.Contract(fundMarketAddress,FundMarket.abi, signer)
-        const user_contract = new ethers.Contract(usersAddress,Users.abi, signer)
         try {
         const transaction = await contract.reply(account,replyBox,commentId,id)
         await transaction.wait()
-        const notify_transaction = await user_contract.notifyCommentReplies(commentOwner, id, commentId)
-        await notify_transaction.wait()
         successComment()
         setReplyId(0)
         setReplyBox("")

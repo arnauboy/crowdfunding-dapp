@@ -14,7 +14,7 @@ import {
 } from '../../utils/addresses'
 import Users from '../../artifacts/contracts/Users.sol/Users.json'
 import { ethers } from 'ethers'
-import {useState,useEffect} from 'react'
+import {useState} from 'react'
 
 const logout = () => {
   setGlobalState("accountSignedIn",'')
@@ -35,12 +35,13 @@ const Navbar = () => {
   const color = useGlobalState("color")[0];
   const navigate = useNavigate()
 
-  //getUser() //Not using useEffect because it was not being updated when username and color are changed in global variables
+  getUser() //Not using useEffect because it was not being updated when username and color are changed in global variables
 
-  useEffect(() => {
+  /*useEffect(() => {
     getUser()
   }, [username] // eslint-disable-line react-hooks/exhaustive-deps
-)
+
+)*/
 
   //Same function as in signin.js. Hook calls can only be done from function component body
   async function getUser() {
@@ -99,7 +100,7 @@ const Navbar = () => {
              aria-label="Search" aria-describedby="search-addon" value = {searchWord} onChange = {(event) => setSearchWord(event.target.value)} onKeyDown={searchCampaigns}  />
           </div>
         </NavMenu>
-        <div style={{display: "flex", alignItems: "center"}}>
+        <div style={{display: "flex", alignItems: "center", justifyContent: "flex-end"}}>
           {loadingState === 'loaded' && username !== ''
           ?
           <div className="tooltip" style={{ color: color}}> {username}

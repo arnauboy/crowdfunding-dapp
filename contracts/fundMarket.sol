@@ -3,13 +3,21 @@ pragma solidity ^0.8.4;
 
 import "@openzeppelin/contracts/utils/Counters.sol";
 import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
-
 import "hardhat/console.sol";
+
+interface IUsers {
+  function notifyCommentReplies(address ,uint , uint ) external;
+  function notifyFundsReached(address,uint) external;
+  function notifyCommentInYourCampaign(address,uint) external;
+}
+
 contract FundMarket is ReentrancyGuard {
   using Counters for Counters.Counter;
   Counters.Counter private _itemIds;
   Counters.Counter private _closedCampaigns;
   Counters.Counter private _commentIds;
+
+  address users_address;
 
   struct FundingCampaign {
       uint itemId;
@@ -42,6 +50,11 @@ contract FundMarket is ReentrancyGuard {
     address campaignOwner,
     uint256 FundsRequested
   );
+
+  constructor(address _users) {
+    users_address = _users;
+  }
+
 
   function getCampaign(uint256 itemId) public view returns (FundingCampaign memory) {
         return idToFundingCampaign[itemId];
@@ -89,6 +102,7 @@ contract FundMarket is ReentrancyGuard {
         if(campaign.FundsCollected >= campaign.FundsRequested) {
           _closedCampaigns.increment();
           campaign.fundsReached = true;
+          IUsers(users_address).notifyFundsReached(campaign.campaignOwner,itemId);
         }
     }
 
@@ -197,6 +211,9 @@ contract FundMarket is ReentrancyGuard {
       campaignId,
       0
     );
+    FundingCampaign memory campaign = idToFundingCampaign[campaignId]; //We need the campaign owner te create the notification
+    IUsers(users_address).notifyCommentInYourCampaign(campaign.campaignOwner,campaignId);
+
   }
 
   function reply(address user, string calldata message, uint parentCommentId, uint campaignId) public nonReentrant{
@@ -210,6 +227,8 @@ contract FundMarket is ReentrancyGuard {
       campaignId,
       parentCommentId
     );
+    FundingCampaign memory campaign = idToFundingCampaign[campaignId];
+    IUsers(users_address).notifyCommentReplies(campaign.campaignOwner,campaignId,id);
   }
 
   //Get campaign comments. Replies excluded
@@ -262,5 +281,4 @@ contract FundMarket is ReentrancyGuard {
   function getComment(uint256 id) public view returns (Comment memory) {
         return idToComment[id];
   }
-
 }

@@ -18,11 +18,11 @@ import Thread from './pages/thread'
 import React from 'react';
 import {useGlobalState} from './state'
 import { ToastContainer } from 'react-toastify';
-
+import {blockchain} from './utils/addresses'
 
 function App() {
   let network = useGlobalState('currentNetwork')[0]
-  if(network !== "0x13881" ) {
+  if(network !== blockchain ) {
     return (<SignIn/>);
   }
   return (
