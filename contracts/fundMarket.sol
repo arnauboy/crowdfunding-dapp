@@ -278,6 +278,19 @@ contract FundMarket is ReentrancyGuard {
     return replies;
   }
 
+  //Get number of replies
+  function getNumberOfReplies(uint commentId) public view returns (uint) {
+    require(commentId != 0, "Comment identifier cannot be zero");
+    uint commentsCount = _commentIds.current();
+    uint nReplies = 0;
+    for (uint i = 1; i<= commentsCount; ++i) {
+      if (idToComment[i].parentCommentId == commentId) {
+        ++nReplies;
+      }
+    }
+    return nReplies;
+  }
+
   function getComment(uint256 id) public view returns (Comment memory) {
         return idToComment[id];
   }

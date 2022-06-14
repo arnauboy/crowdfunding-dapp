@@ -176,13 +176,15 @@ const Campaign = () => {
         const data = await contract.getComments(id);
         const items = await Promise.all(data.map(async i => {
           const user = await getUser(i.commentator)
+          const num_replies = await contract.getNumberOfReplies(i.commentId.toNumber())
           let item = {
             commentId: i.commentId.toNumber(),
             commentator : i.commentator,
             message: i.message,
             parentCommentId: i.parentCommentId.toNumber(),
             username: user.username,
-            color: user.color
+            color: user.color,
+            num_replies: num_replies.toNumber()
           }
           return item
         }))
@@ -353,7 +355,6 @@ const Campaign = () => {
         {
           comments.map((comment, i) => {
             //getUser(comment.commentator)
-
             return (
               <div key={i} className="card p-3" style = {{marginTop: "30px"}}>
                 <div className="d-flex justify-content-between align-items-center">
@@ -372,7 +373,7 @@ const Campaign = () => {
                   <div className="action d-flex justify-content-between mt-2 align-items-center">
                     <div className="reply">
                       <small> <button style = {{textDecoration: "underline"}} onClick={() => setReplyId(comment.commentId)}>Reply </button></small>
-                      <small> <button style = {{textDecoration: "underline"}} onClick={() => {  navigate(`threads/${comment.commentId}`)}}> Thread </button></small>
+                      <small> <button style = {{textDecoration: "underline"}} onClick={() => {  navigate(`threads/${comment.commentId}`)}}> Thread ({comment.num_replies} )</button></small>
                      </div>
 
                   </div>
