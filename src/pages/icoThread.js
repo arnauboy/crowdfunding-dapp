@@ -4,10 +4,9 @@ import {
 } from "react-router-dom";
 import {useEffect, useState} from 'react'
 import { ethers } from 'ethers'
-import FundMarket from '../artifacts/contracts/fundMarket.sol/FundMarket.json'
+import ICOComments from '../artifacts/contracts/ICOComments.sol/ICOComments.json'
 import Users from '../artifacts/contracts/Users.sol/Users.json'
-import {fundMarketAddress} from "../utils/addresses.js"
-import {usersAddress} from "../utils/addresses"
+import {icoComments,usersAddress,ivoryICOAddress} from "../utils/addresses"
 import {useGlobalState} from '../state'
 import {toast } from 'react-toastify';
 
@@ -18,9 +17,10 @@ const failedComment = () => {
 const successComment = () => {
     toast.success("Succesfully commented!",{ autoClose: 5000, position: toast.POSITION.TOP_RIGHT, toastId: "123"})
   };
-const Thread = () => {
+const ICOThread = () => {
   let { commentId } = useParams();
-  let { id } = useParams();
+  let { ico } = useParams();
+
   const [replies, setReplies] = useState([])
   const [comment, setComment] = useState([])
   const account = useGlobalState("accountSignedIn")[0];
@@ -38,7 +38,7 @@ const Thread = () => {
   async function loadComment(commentId) {
     if(typeof window.ethereum !== 'undefined'){
       const provider = new ethers.providers.Web3Provider(window.ethereum); //we could use provier JsonRpcProvider()
-      const contract = new ethers.Contract(fundMarketAddress,FundMarket.abi, provider)
+      const contract = new ethers.Contract(icoComments,ICOComments.abi, provider)
       try {
         const data = await contract.getComment(commentId);
         const user = await getUser(data.commentator)
@@ -63,9 +63,9 @@ const Thread = () => {
       if(username !== '') {
         const provider = new ethers.providers.Web3Provider(window.ethereum);
         const signer = provider.getSigner()
-        const contract = new ethers.Contract(fundMarketAddress,FundMarket.abi, signer)
+        const contract = new ethers.Contract(icoComments,ICOComments.abi, signer)
         try {
-        const transaction = await contract.reply(account,replyBox,commentId,id)
+        const transaction = await contract.reply(account,replyBox,commentId,ivoryICOAddress)
         await transaction.wait()
         successComment()
         setReplyId(0)
@@ -104,7 +104,7 @@ const Thread = () => {
   async function loadReplies(commentId){
     if (typeof window.ethereum !== 'undefined'){
       const provider = new ethers.providers.Web3Provider(window.ethereum);
-      const contract = new ethers.Contract(fundMarketAddress,FundMarket.abi, provider)
+      const contract = new ethers.Contract(icoComments,ICOComments.abi, provider)
       try {
         const data = await contract.getReplies(commentId);
         const items = await Promise.all(data.map(async i => {
@@ -168,7 +168,6 @@ const Thread = () => {
            </div>
         {
           replies.map((reply, i) => {
-            //getUser(comment.commentator)
 
             return (
               <div key = {i} className="card p-3" style = {{marginTop: "30px",marginLeft: "50px"}}>
@@ -188,8 +187,9 @@ const Thread = () => {
                   <div className="action d-flex justify-content-between mt-2 align-items-center">
                     <div className="reply">
                       <small> <button style = {{textDecoration: "underline"}} onClick={() => setReplyId(reply.commentId)}>Reply </button></small>
-                      <small> <button style = {{textDecoration: "underline"}} onClick={() => { navigate(`/campaigns/${id}/threads/${reply.commentId}`); navigate(0) }}> Thread ({reply.num_replies}) </button></small>
+                      <small> <button style = {{textDecoration: "underline"}} onClick={() => { navigate(`/icos/${ico}/threads/${reply.commentId}`); navigate(0)}}> Thread ({reply.num_replies} ) </button></small>
                      </div>
+
                   </div>
                   {replyId === reply.commentId &&
                      <div style = {{paddingTop: "30px"}}>
@@ -214,4 +214,4 @@ const Thread = () => {
   );
 }
 
-export default Thread;
+export default ICOThread;

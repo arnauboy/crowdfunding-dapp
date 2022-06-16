@@ -1,33 +1,33 @@
 import React from 'react';
+import {
+  useNavigate
+} from "react-router-dom";
 import { ethers } from 'ethers'
-import {toast } from 'react-toastify';
 import {useEffect, useState} from 'react'
-import {ivoryICOAddress} from "../utils/addresses"
+import {ivoryICOAddress, icoComments,usersAddress} from "../utils/addresses"
 import ICO from '../artifacts/contracts/ivoryICO.sol/ICO.json'
+import ICOComments from '../artifacts/contracts/ICOComments.sol/ICOComments.json'
+import Users from '../artifacts/contracts/Users.sol/Users.json'
 import ivoryCoinLogo from '../images/ivoyCoin.png'
 import {useGlobalState} from '../state'
+import {successBuyToast,failedBuyToast,successWithdrawToast,successComment
+  ,failedComment,} from '../utils/toasts'
 
-
-const successBuyToast = () => {
-    toast.success("Succesfully bought!",{ autoClose: 5000, position: toast.POSITION.TOP_RIGHT, toastId: "123"})
-  };
-
-const successWithdrawToast = () => {
-    toast.success("Succesfully withdrawn!",{ autoClose: 5000, position: toast.POSITION.TOP_RIGHT, toastId: "123"})
-  };
-
-const failedBuyToast = () => {
-    toast.error("Failed to buy",{ autoClose: 5000, position: toast.POSITION.TOP_RIGHT, toastId: "123"})
-  };
 const IvoryICO = () => {
   const [ico, setICO] = useState([])
   const [fundsPercentage, setFundsPercentage] = useState(0)
   const [donation, setDonation] = useState("0")
   const [withdraw, setWithdraw] = useState("0")
+  const [comments, setComments] = useState([])
+  const [commentBox, setCommentBox] = useState("")
+  const [replyBox, setReplyBox] = useState("")
+  const [replyId, setReplyId] = useState(0) //ReplyId is the id of the comment user is replying.It is initially set to 0 because Ids start at 1
   const account = useGlobalState("accountSignedIn")[0];
-  console.log(account)
+  const username = useGlobalState("username")[0];
+  const navigate = useNavigate()
+
   useEffect(() => {
-    loadICO() }
+    loadICO(); loadComments(ivoryICOAddress) } , [account]// eslint-disable-line react-hooks/exhaustive-deps
   )
 
   async function donateico(donation) {
@@ -99,6 +99,98 @@ async function withdrawEther(withdraw) {
         }
         setICO(item);
         setFundsPercentage((item.leftSupply / item.totalSupply) * 100)
+      }
+      catch (err){
+        console.log("Error: " , err)
+      }
+    }
+  }
+
+  async function loadComments(ico){
+    if (typeof window.ethereum !== 'undefined'){
+      const provider = new ethers.providers.Web3Provider(window.ethereum);
+      const contract = new ethers.Contract(icoComments,ICOComments.abi, provider)
+      try {
+        const data = await contract.getComments(ico);
+        const items = await Promise.all(data.map(async i => {
+          const user = await getUser(i.commentator)
+          const num_replies = await contract.getNumberOfReplies(i.commentId.toNumber())
+          let item = {
+            commentId: i.commentId.toNumber(),
+            commentator : i.commentator,
+            message: i.message,
+            parentCommentId: i.parentCommentId.toNumber(),
+            username: user.username,
+            color: user.color,
+            num_replies: num_replies.toNumber()
+          }
+          return item
+        }))
+        setComments(items);
+      }
+      catch (err){
+        console.log("Error: " , err)
+      }
+    }
+  }
+
+  async function addComment(ico){
+    if (typeof window.ethereum !== 'undefined'){
+      if(username !== '' && commentBox !== "") {
+        const provider = new ethers.providers.Web3Provider(window.ethereum);
+        const signer = provider.getSigner()
+        const contract = new ethers.Contract(icoComments,ICOComments.abi, signer)
+        try {
+        const transaction = await contract.comment(account,commentBox,ico)
+        await transaction.wait()
+        successComment()
+        await loadComments(ico)
+        }
+        catch (err){
+          console.log("Error: " , err)
+          failedComment()
+        }
+      }
+      else failedComment()
+    }
+  }
+
+  async function addReply(commentId, ico){
+    if (typeof window.ethereum !== 'undefined'){
+
+      if(username !== '') {
+        const provider = new ethers.providers.Web3Provider(window.ethereum);
+        const signer = provider.getSigner()
+        const contract = new ethers.Contract(icoComments,ICOComments.abi, signer)
+        try {
+        const transaction = await contract.reply(account,replyBox,commentId,ico)
+        await transaction.wait()
+        successComment()
+        setReplyId(0)
+        setReplyBox("")
+        await loadComments(ico)
+        }
+        catch (err){
+          console.log("Error: " , err)
+          failedComment()
+        }
+      }
+      else failedComment()
+    }
+  }
+
+  async function getUser(userAccount) {
+    if(typeof window.ethereum !== 'undefined'){
+      const provider = new ethers.providers.Web3Provider(window.ethereum); //we could use provier JsonRpcProvider()
+      const contract = new ethers.Contract(usersAddress,Users.abi, provider)
+      try {
+        const data = await contract.getUser(userAccount)
+        let item = {
+          username: data.username,
+          usersAddress : data.usersAddress,
+          color: data.color
+        }
+        return item;
       }
       catch (err){
         console.log("Error: " , err)
@@ -193,6 +285,62 @@ async function withdrawEther(withdraw) {
         <div>
           Contract: {ivoryICOAddress}
         </div>
+      </div>
+      <div style = {{paddingTop: "30px"}}>
+        <input
+          className="form-control"
+          value={commentBox}
+          onChange={e => setCommentBox(e.target.value)}
+          placeholder="Add a comment..."
+          />
+        <button style = {{marginTop: "10px"}}type="button" className="btn btn-outline-secondary" onClick={() => addComment(ivoryICOAddress) }>Comment</button>
+      </div>
+      <div style = {{paddingTop: "30px"}} >
+        <p style = {{fontSize: "20px"}}> User comments </p>
+        <hr/>
+        {
+          comments.map((comment, i) => {
+            //getUser(comment.commentator)
+            return (
+              <div key={i} className="card p-3" style = {{marginTop: "30px"}}>
+                <div className="d-flex justify-content-between align-items-center">
+                  <div className="user d-flex flex-row align-items-center">
+                    <span><small className="font-weight-bold text-primary">
+                    {comment.username !== ''
+                    ?
+                    <div className="tooltip" style={{ color: comment.color}}> {comment.username}
+                      <span className="tooltiptext"> {comment.commentator} </span>
+                    </div>
+                    : comment.commentator
+                    }
+                    </small> <small className="font-weight-bold">{comment.message}</small></span>
+                  </div>
+                  </div>
+                  <div className="action d-flex justify-content-between mt-2 align-items-center">
+                    <div className="reply">
+                      <small> <button style = {{textDecoration: "underline"}} onClick={() => setReplyId(comment.commentId)}>Reply </button></small>
+                      <small> <button style = {{textDecoration: "underline"}} onClick={() => {  navigate(`/icos/ivoryICO/threads/${comment.commentId}`)}}> Thread ({comment.num_replies} )</button></small>
+                     </div>
+
+                  </div>
+                  {replyId === comment.commentId &&
+                     <div style = {{paddingTop: "30px"}}>
+                        <input
+                          className="form-control"
+                          value={replyBox}
+                          onChange={e => setReplyBox(e.target.value)}
+                          placeholder="Add a reply..."
+                          />
+                          <button style = {{marginTop: "10px"}}type="button" className="btn btn-outline-secondary" onClick={() => addReply(comment.commentId, ivoryICOAddress) }>Reply</button>
+                          <button style = {{marginTop: "10px"}}type="button" className="btn btn-outline-danger" onClick={() => setReplyId(0) }>Close</button>
+
+                      </div>
+                 }
+                 </div>
+               )
+            }
+          )
+        }
       </div>
     </div>
   );

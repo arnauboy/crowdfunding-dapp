@@ -8,42 +8,11 @@ import FundMarket from '../artifacts/contracts/fundMarket.sol/FundMarket.json'
 import Users from '../artifacts/contracts/Users.sol/Users.json'
 import {fundMarketAddress} from "../utils/addresses"
 import {usersAddress} from "../utils/addresses"
-import {toast } from 'react-toastify';
 import {useGlobalState} from '../state'
 import star from '../images/star.png'
 import star_filled from '../images/star_complete.png'
-
-const successDonationToast = () => {
-    toast.success("Succesfully donated!",{ autoClose: 5000, position: toast.POSITION.TOP_RIGHT, toastId: "123"})
-  };
-
-const failedDonationToast = () => {
-    toast.error("Failed to donate",{ autoClose: 5000, position: toast.POSITION.TOP_RIGHT, toastId: "123"})
-  };
-
-const successFav = () => {
-    toast.success("Succesfully added to fav list!",{ autoClose: 5000, position: toast.POSITION.TOP_RIGHT, toastId: "123"})
-  };
-
-const successUnfav = () => {
-    toast.success("Succesfully removed from fav list!",{ autoClose: 5000, position: toast.POSITION.TOP_RIGHT, toastId: "123"})
-  };
-
-const successComment = () => {
-    toast.success("Succesfully commented!",{ autoClose: 5000, position: toast.POSITION.TOP_RIGHT, toastId: "123"})
-  };
-
-const failedUnfav = () => {
-    toast.error("Failed removing from fav list",{ autoClose: 5000, position: toast.POSITION.TOP_RIGHT, toastId: "123"})
-  };
-
-const failedFav = () => {
-    toast.error("Failed adding to fav list",{ autoClose: 5000, position: toast.POSITION.TOP_RIGHT, toastId: "123"})
-  };
-
-const failedComment = () => {
-    toast.error("Failed to comment. User must have a username",{ autoClose: 5000, position: toast.POSITION.TOP_RIGHT, toastId: "123"})
-  };
+import {successFav,successUnfav,successComment,successDonationToast,
+  failedDonationToast,failedFav,failedUnfav,failedComment} from '../utils/toasts'
 
 const Campaign = () => {
   const [campaign, setCampaign] = useState([])
@@ -196,11 +165,8 @@ const Campaign = () => {
     }
   }
 
-  async function addComment(id, campaignOwner){
+  async function addComment(id){
     if (typeof window.ethereum !== 'undefined'){
-      console.log("add comment")
-    //  await getUser(account)
-
       if(username !== '' && commentBox !== "") {
         const provider = new ethers.providers.Web3Provider(window.ethereum);
         const signer = provider.getSigner()
@@ -220,7 +186,7 @@ const Campaign = () => {
     }
   }
 
-  async function addReply(commentId, commentOwner){
+  async function addReply(commentId){
     if (typeof window.ethereum !== 'undefined'){
 
       if(username !== '') {
@@ -347,7 +313,7 @@ const Campaign = () => {
           onChange={e => setCommentBox(e.target.value)}
           placeholder="Add a comment..."
           />
-        <button style = {{marginTop: "10px"}}type="button" className="btn btn-outline-secondary" onClick={() => addComment(id, campaign.owner) }>Comment</button>
+        <button style = {{marginTop: "10px"}}type="button" className="btn btn-outline-secondary" onClick={() => addComment(id) }>Comment</button>
       </div>
       <div style = {{paddingTop: "30px"}} >
         <p style = {{fontSize: "20px"}}> User comments </p>
@@ -385,7 +351,7 @@ const Campaign = () => {
                           onChange={e => setReplyBox(e.target.value)}
                           placeholder="Add a reply..."
                           />
-                          <button style = {{marginTop: "10px"}}type="button" className="btn btn-outline-secondary" onClick={() => addReply(comment.commentId, comment.commentator) }>Reply</button>
+                          <button style = {{marginTop: "10px"}}type="button" className="btn btn-outline-secondary" onClick={() => addReply(comment.commentId) }>Reply</button>
                           <button style = {{marginTop: "10px"}}type="button" className="btn btn-outline-danger" onClick={() => setReplyId(0) }>Close</button>
 
                       </div>

@@ -16,6 +16,11 @@ async function main() {
   const ivoryICO = await IvoryICO.deploy("0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266",10000,100);
   await ivoryICO.deployed();
   console.log("IvoryICO deployed to:", ivoryICO.address);
+
+  const ICOComments = await hre.ethers.getContractFactory("ICOComments");
+  const icoComm = await ICOComments.deploy();
+  await icoComm.deployed();
+  console.log("ICOComments deployed to:", icoComm.address);
 }
 
 main()

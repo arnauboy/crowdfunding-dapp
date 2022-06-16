@@ -12,6 +12,7 @@ import AccountSettings from './pages/accountSettings'
 import ICOs from './pages/icos'
 import Campaign from './pages/campaign'
 import IvoryICO from './pages/ico'
+import ICOThread from './pages/icoThread'
 import MyCampaigns from './pages/myCampaigns'
 import Favourites from './pages/favourites'
 import Thread from './pages/thread'
@@ -41,6 +42,7 @@ function App() {
           <Route path='/campaigns/:id' element={<Campaign />} />
           <Route path='/campaigns/:id/threads/:commentId' element={<Thread />} />
           <Route path='/icos/ivoryICO' element={<IvoryICO />} />
+          <Route path='/icos/:ico/threads/:commentId' element={<ICOThread />} />
           <Route path='/my-campaigns' element={<MyCampaigns />} />
           <Route path='/favourites' element={<Favourites />} />
       </Routes>

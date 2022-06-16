@@ -1,13 +1,9 @@
 import React from 'react';
 import {setGlobalState,useGlobalState} from '../state'
-import {toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import ivoryLogo from '../images/ivoryLogo.png'
 import {blockchain} from '../utils/addresses'
-
-const successToast = () => {
-    toast.success("Succesfully signed in!",{ autoClose: 5000, position: toast.POSITION.TOP_RIGHT, toastId: "123"})
-  };
+import {successToast} from '../utils/toasts'
 
   const logout = () => {
     setGlobalState("accountSignedIn",'')
@@ -24,7 +20,7 @@ const successToast = () => {
 export function getAccount() {
   logout()
   let setEventListener=false;
-  const correctNetwork = blockchain 
+  const correctNetwork = blockchain
   let network;
   window.ethereum ?
   window.ethereum.request({method: "eth_requestAccounts"}).then((accounts) => {
